@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { RouterModule } from '@angular/router';
 import {
   faHome,
   faUser,
@@ -15,12 +16,12 @@ import {
 
 @Component({
   selector: 'aside-menu',
-  imports: [RouterLink, RouterLinkActive, FontAwesomeModule],
+  imports: [RouterLink, RouterLinkActive, FontAwesomeModule, RouterModule],
   templateUrl: './aside-menu.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AsideMenuComponent {
- faHome = faHome;
+  faHome = faHome;
   faUser = faUser;
   faTable = faTable;
   faDollarSign = faDollarSign;
@@ -29,5 +30,15 @@ export class AsideMenuComponent {
   faUserPlus = faUserPlus;
   faTimes = faTimes;
   faCreditCard = faCreditCard
+
+  onSignIn = output<void>();
+  onSignOut = output<void>();
+
+  isAuthenticated = input<boolean>(false);
+
+  ngOnInit() {
+    console.log('🔍 Estado inicial en aside-menu:', this.isAuthenticated());
+  }
+
 
 }

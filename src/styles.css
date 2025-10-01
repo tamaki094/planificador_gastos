@@ -1,1 +1,10 @@
 @import "tailwindcss";
+
+
+.active button {
+  @apply bg-gradient-to-tr from-blue-600 to-blue-400 text-white shadow-md shadow-blue-500/20;
+}
+
+.active button:hover {
+  @apply shadow-lg shadow-blue-500/40;
+}

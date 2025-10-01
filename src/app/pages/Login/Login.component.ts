@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 
 @Component({
-  selector: 'nav-bar',
+  selector: 'login-page',
   imports: [],
-  templateUrl: './nav-bar.component.html',
+  templateUrl: './Login.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NavBarComponent {
+export default class LoginComponent {
 
-}
+ }

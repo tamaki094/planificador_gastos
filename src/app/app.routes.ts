@@ -10,6 +10,14 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/Sueldo/Sueldo.component')
   },
   {
+    path: 'profile',
+    loadComponent: () => import('./pages/Profile/Profile.component')
+  },
+  {
+    path: 'login',
+    loadComponent: () => import('./pages/Login/Login.component')
+  },
+  {
     path: '**',
     redirectTo: 'gastos-fijos'
   }

@@ -1,5 +1,5 @@
 <div class="min-h-screen bg-gray-50/50">
-  <aside-menu />
+  <aside-menu (onSignOut)="handleSignOut()" (onSignIn)="handleSignIn()"  [isAuthenticated]="isUserAuthenticated()"></aside-menu>
   <div class="p-4 xl:ml-80">
     <nav-bar />
     <router-outlet />

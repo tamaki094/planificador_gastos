@@ -12,4 +12,17 @@ import { FooterComponent } from './shared/footer/footer.component';
 })
 export class App {
   protected readonly title = signal('PlanificadorGastos');
+  isUserAuthenticated = signal(false);
+
+  handleSignOut() {
+    console.log('🔴 Sign Out ejecutado');
+    this.isUserAuthenticated.set(false);
+    console.log('Estado después:', this.isUserAuthenticated());
+  }
+
+  handleSignIn() {
+    console.log('🟢 Sign In ejecutado');
+    this.isUserAuthenticated.set(true);
+    console.log('Estado después:', this.isUserAuthenticated());
+  }
 }
