@@ -1,1 +1,67 @@
-<p>GastosFijos works!</p>
+<div class="container grid grid-cols-1 md:grid-cols-3 gap-4">
+  <div id="formulario_gasto_fijo" class="bg-blue-300  col-span-1 p-4">
+    <h1 class="text-black text-3xl font-bold">Formulario de Gasto Fijo</h1>
+    <hr class="my-4 border-gray-300">
+    <div id="categoria_gasto_fijo" class="grid grid-cols-2 md:grid-cols-3 gap-4 mt-4">
+      <div id="btn_vivienda" class="btnCategoria">
+        <img src="casa.svg" />
+        <span>Vivienda</span>
+      </div>
+      <div id="btn_transporte" class="btnCategoria">
+        <img src="bus.svg" />
+        <span>Transporte</span>
+      </div>
+      <div id="btn_ServiciosBasicos" class="btnCategoria">
+        <img src="servicios.svg" />
+        <span>Servicios Básicos</span>
+      </div>
+      <div id="btn_Alimentacion" class="btnCategoria">
+        <img src="comida.svg" />
+        <span>Alimentación</span>
+      </div>
+      <div id="btn_Salud" class="btnCategoria">
+        <img src="salud.svg" />
+        <span>Salud</span>
+      </div>
+      <div id="btn_Educacion" class="btnCategoria">
+        <img src="educacion.svg" />
+        <span>Educación</span>
+      </div>
+      <div id="btn_Entretenimiento" class="btnCategoria">
+        <img src="entretenimiento.svg" />
+        <span>Entretenimiento</span>
+      </div>
+      <div id="btn_Mascotas" class="btnCategoria">
+        <img src="mascotas.svg" />
+        <span>Mascotas</span>
+      </div>
+      <div id="btn_Otros" class="btnCategoria">
+        <img src="otros.svg" />
+        <span>Otros</span>
+      </div>
+    </div>
+    <hr class="my-4 border-gray-300">
+    <div id="detalles_gasto_fijo" class="mt-4">
+      <form>
+        <div class="mb-4">
+          <label for="nombre" class="block text-black font-bold mb-2">Nombre del Gasto Fijo:</label>
+          <input type="text" id="nombre" name="nombre" class="w-full p-2 border border-gray-300 rounded">
+        </div>
+        <div class="mb-4">
+          <label for="monto" class="block text-black font-bold mb-2">Monto:</label>
+          <input type="number" id="monto" name="monto" class="w-full p-2 border border-gray-300 rounded">
+        </div>
+        <button
+          type="submit"
+          class="h-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full  px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        >
+          Guardar
+        </button>
+      </form>
+    </div>
+  </div>
+  <div id="lista_gastos_fijos" class="bg-amber-100 col-span-2 p-4">
+    <h1>Lista de Gastos Fijos</h1>
+
+  </div>
+</div>

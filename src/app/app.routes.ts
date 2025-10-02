@@ -18,6 +18,11 @@ export const routes: Routes = [
     canActivate: [AuthGuardService]
   },
   {
+    path: 'dashboard',
+    loadComponent: () => import('./pages/Dashboard/Dashboard.component'),
+    canActivate: [AuthGuardService]
+  },
+  {
     path: 'login',
     loadComponent: () => import('./pages/Login/Login.component')
   },
