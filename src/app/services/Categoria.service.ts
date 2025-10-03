@@ -11,12 +11,9 @@ import {
 } from '@angular/fire/firestore';
 
 import { Observable } from 'rxjs';
+import { Categoria } from '../interfaces';
 
-// Define tu interfaz para Category, incluyendo el id que @angular/fire añade
-export interface Categoria {
-  id?: string; // @angular/fire lo añade cuando usas collectionData o docData
-  name: string;
-}
+
 
 @Injectable({
   providedIn: 'root'
