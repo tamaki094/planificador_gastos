@@ -23,8 +23,15 @@ export default class GastosFijosComponent implements OnInit {
   gastoService = inject(GastoService);
   gastosFijos = signal<Gasto[]>([]);
   trashHide = signal<boolean>(true);
+  gastosSeleccionadosArr = signal<Gasto[]>([]);
+  gastoEnEdicion = signal<Gasto | null>(null);
 
-  gastosSeleccionados = signal<number>(0);
+  formularioData = {
+    categoria: '',
+    nombre: '',
+    monto: 0
+  };
+
 
   ngOnInit() : void{
     this.user.subscribe(user => {
@@ -34,7 +41,6 @@ export default class GastosFijosComponent implements OnInit {
         this.gastoService.getAllGastos().subscribe((gastos : Gasto[])=> {
           console.log('Gastos obtenidos:', gastos);
           this.gastosFijos.set(gastos);
-          this.gastosSeleccionados.set(gastos.length);
         });
 
       }
@@ -48,16 +54,24 @@ export default class GastosFijosComponent implements OnInit {
     });
   }
 
-  onGastoSelect(gasto: Gasto,$event: Event) {
-    this.gastosSeleccionados.set($event ? (this.gastosSeleccionados() + 1) : (this.gastosSeleccionados() - 1));
+  onGastoSelect(gasto: Gasto, $event: Event) {
+    const isChecked = ($event.target as HTMLInputElement).checked;
 
-    if(this.gastosSeleccionados() === 0){
-      console.log('No hay gastos seleccionados, ocultando ícono de basura');
-      this.trashHide.set(true);
-    }
-    else{
-      console.log('Gastos seleccionados:', this.gastosSeleccionados());
+    if (isChecked) {
+      // ✅ Checkbox marcado = AGREGAR gasto
+      this.gastosSeleccionadosArr.update(gastos => [...gastos, gasto]);
       this.trashHide.set(false);
+    }
+    else {
+      // ✅ Checkbox desmarcado = QUITAR gasto
+      this.gastosSeleccionadosArr.update(gastos =>
+        gastos.filter(g => g.id !== gasto.id)
+      );
+
+      // Si ya no hay seleccionados, ocultar botón
+      if (this.gastosSeleccionadosArr().length === 0) {
+        this.trashHide.set(true);
+      }
     }
   }
 
@@ -66,29 +80,149 @@ export default class GastosFijosComponent implements OnInit {
     if(form.valid){
       const formData = form.value;
 
-      const nuevoGasto : Omit<Gasto, 'id'> ={
-        categoria_gasto : formData.categoria,
-        fecha_creacion : new Date(),
-        monto : parseFloat(formData.monto),
-        name : formData.nombre,
-        tipo_gasto: TipoGasto.FIJO
-      };
-
-      try{
-        await this.gastoService.crearGasto(nuevoGasto);
-        console.log('Gasto fijo creado exitosamente:', nuevoGasto);
-        form.resetForm();
+      if (this.gastoEnEdicion()) {
+        // MODO EDICIÓN
+        await this.actualizarGasto(formData);
       }
-      catch(error){
-        console.error('Error al crear el gasto fijo:', error);
-        Swal.fire({
-          icon: 'error',
-          title: 'Oops...',
-          text: 'Error al crear el gasto fijo.',
-          confirmButtonColor: '#3B82F6'
-        });
+      else {
+        // MODO CREACIÓN
+        await this.crearNuevoGasto(formData);
       }
     }
   }
 
+  private async actualizarGasto(formData: any) {
+    const gastoActualizado: Partial<Gasto> = {
+      categoria_gasto: formData.categoria,
+      name: formData.nombre,
+      monto: parseFloat(formData.monto)
+    };
+
+    try {
+      await this.gastoService.actualizarGasto(this.gastoEnEdicion()!.id!, gastoActualizado);
+
+      // Actualizar la lista local
+      this.gastosFijos.update(gastos =>
+        gastos.map(g =>
+          g.id === this.gastoEnEdicion()!.id
+            ? { ...g, ...gastoActualizado }
+            : g
+        )
+      );
+
+      this.limpiarFormulario();
+
+      Swal.fire({
+        icon: 'success',
+        title: '¡Actualizado!',
+        text: 'Gasto actualizado correctamente.',
+        timer: 1500
+      });
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se pudo actualizar el gasto.'
+      });
+    }
+  }
+
+  private async crearNuevoGasto(formData: any) {
+    // Tu lógica actual de creación
+    const nuevoGasto: Omit<Gasto, 'id'> = {
+      categoria_gasto: formData.categoria,
+      fecha_creacion: new Date(),
+      monto: parseFloat(formData.monto),
+      name: formData.nombre,
+      tipo_gasto: TipoGasto.FIJO
+    };
+
+    try {
+      await this.gastoService.crearGasto(nuevoGasto);
+      this.limpiarFormulario();
+    }
+    catch (error) {
+      console.error('Error al crear el gasto fijo:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Error al crear el gasto fijo.',
+        confirmButtonColor: '#3B82F6'
+      });
+    }
+  }
+
+  limpiarFormulario() {
+    this.formularioData = {
+      categoria: '',
+      nombre: '',
+      monto: 0
+    };
+    this.gastoEnEdicion.set(null);
+  }
+
+  eliminarGastosSeleccionados() {
+    Swal.fire({
+      icon: 'warning',
+      title: 'Borrar elementos',
+      text: `¿Estás seguro de que deseas eliminar los ${this.gastosSeleccionadosArr().length} gastos seleccionados?`,
+      showCancelButton: true,           // ← Mostrar botón cancelar
+      confirmButtonText: 'Sí, eliminar', // ← Texto del botón confirmar
+      cancelButtonText: 'No, cancelar',   // ← Texto del botón cancelar
+      confirmButtonColor: '#EF4444',      // ← Rojo para eliminar
+      cancelButtonColor: '#6B7280',       // ← Gris para cancelar
+      reverseButtons: true                // ← Opcional: cancelar a la izquierda
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // ✅ Usuario confirmó - proceder a eliminar
+        console.log('Usuario confirmó eliminación');
+        this.procesarEliminacion();
+      }
+      else {
+      // ❌ Usuario canceló
+        console.log('Usuario canceló eliminación');
+        Swal.fire({
+          icon: 'info',
+          title: 'Cancelado',
+          text: 'Los gastos no fueron eliminados.',
+          timer: 1500,
+          showConfirmButton: false
+        });
+      }
+    });
+  }
+
+  procesarEliminacion() {
+    this.gastoService.eliminarGastos(this.gastosSeleccionadosArr()).then(() => {
+      console.log('Gastos eliminados exitosamente');
+      Swal.fire({
+        icon: 'success',
+        title: 'Eliminados',
+        text: 'Los gastos seleccionados han sido eliminados.',
+        timer: 1500,
+        showConfirmButton: false
+      });
+
+      this.gastosFijos.update(gastos =>
+        gastos.filter(gasto =>
+          !this.gastosSeleccionadosArr().some(sel => sel.id === gasto.id)
+        )
+      );
+      this.gastosSeleccionadosArr.set([]);
+      this.trashHide.set(true);
+    });
+  }
+
+  editarGastoSeleccionado(gasto: Gasto) {
+    // Aquí puedes implementar la lógica para editar el gasto seleccionado
+    console.log('Editar gasto seleccionado:', gasto);
+
+    this.formularioData = {
+      categoria: gasto.categoria_gasto,
+      nombre: gasto.name,
+      monto: gasto.monto
+    };
+
+    this.gastoEnEdicion.set(gasto);
+  }
 }

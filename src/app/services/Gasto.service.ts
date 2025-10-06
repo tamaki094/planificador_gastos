@@ -16,7 +16,9 @@ import {
   DocumentData,
   DocumentReference,
   CollectionReference,
-  Query
+  Query,
+  writeBatch,
+  WriteBatch
 } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -26,6 +28,7 @@ import { Gasto } from '../interfaces';
   providedIn: 'root'
 })
 export class GastoService {
+
 
   firestore : Firestore = inject(Firestore);
 
@@ -125,6 +128,14 @@ export class GastoService {
   async eliminarGasto(id: string): Promise<void> {
     const gastoDocRef : DocumentReference<Gasto> = doc(this.firestore, `gastos/${id}`) as DocumentReference<Gasto>;
     return deleteDoc(gastoDocRef);
+  }
+  async eliminarGastos(gastos: Gasto[]) : Promise<void> {
+    const batch : WriteBatch = writeBatch(this.firestore);
+    gastos.forEach(gasto => {
+      const gastoDocRef = doc(this.firestore, `gastos/${gasto.id}`) as DocumentReference<Gasto>;
+      batch.delete(gastoDocRef);
+    });
+    await batch.commit();
   }
 }
 
