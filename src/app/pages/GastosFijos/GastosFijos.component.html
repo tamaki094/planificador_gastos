@@ -109,7 +109,7 @@
           <span class="font-bold text-green-600">{{ gasto.monto | currency:'MXN' }}</span>
           <!-- Oculto por defecto, visible en hover del grupo -->
           <button
-            class="btnEdit opacity-0 group-hover:opacity-100 transition-opacity duration-200 text-yellow-500 hover:bg-yellow-500 hover:text-white p-2 rounded-lg"
+            class="btnEdit md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-200 text-yellow-500 hover:bg-yellow-500 hover:text-white p-2 rounded-lg"
             (click)="editarGastoSeleccionado(gasto)">
             <img src="edit.svg" class="h-5 w-5" />
           </button>

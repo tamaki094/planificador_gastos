@@ -1,1 +1,72 @@
-<p>Sueldo works!</p>
+<form #sueldoForm="ngForm">
+  <div class="max-w-3xl mx-auto p-8 bg-gradient-to-br from-blue-50 via-white to-purple-50 rounded-3xl shadow-xl">
+    <div class="text-center mb-8">
+      <h2 class="text-4xl font-bold mb-3 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+        💰 Planificador de Sueldo
+      </h2>
+      <p class="text-gray-600 text-lg">Desliza para ajustar tu ingreso mensual</p>
+    </div>
+
+    <div class="relative mb-8">
+      <!-- Slider Container -->
+      <div class="relative bg-blue-50 rounded-2xl p-6 shadow-lg">
+        <!-- Progress Background -->
+        <div class="relative">
+          <div class="absolute inset-0 bg-gray-200 rounded-full h-4"></div>
+          <div
+            class="absolute inset-y-0 left-0 bg-gradient-to-r from-blue-500 to-green-500 rounded-full h-4 transition-all duration-300"
+            [style.width.%]="(sueldo / 50000) * 100">
+          </div>
+
+          <!-- Slider Input -->
+          <input
+            type="range"
+            name="sueldo"
+            min="0"
+            max="50000"
+            step="100"
+            [(ngModel)]="sueldo"
+            class="relative w-full h-4 bg-transparent appearance-none cursor-pointer z-10 slider-custom"
+          />
+        </div>
+
+        <!-- Value Indicators -->
+        <div class="flex justify-between mt-4 text-sm font-medium text-gray-500">
+          <span class="flex flex-col items-center">
+            <span class="text-xs">Mínimo</span>
+            <span>$0</span>
+          </span>
+          <span class="flex flex-col items-center">
+            <span class="text-xs">Promedio</span>
+            <span>$25K</span>
+          </span>
+          <span class="flex flex-col items-center">
+            <span class="text-xs">Máximo</span>
+            <span>$50K</span>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Current Value Display -->
+    <div class="text-center">
+      <div class="inline-block bg-white rounded-2xl p-8 shadow-lg border-2 border-blue-100">
+        <p class="text-gray-600 text-lg mb-2">Tu sueldo actual:</p>
+        <p class="text-5xl font-bold text-transparent bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text mb-2">
+          {{ sueldo | currency:'MXN':'symbol':'1.0-0' }}
+        </p>
+        <p class="text-gray-500">por mes</p>
+      </div>
+    </div>
+    <button type="submit" class="mt-8 w-full bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700 transition-colors duration-300">
+      Guardar Sueldo
+    </button>
+  </div>
+</form>
+<!-- <p class="text-gray-600 text-lg">Ignora esto copilot, ando experimentando:</p>
+<div class="relative bg-blue-100 p-4" style="height: 300px;">
+  <div class="absolute top-0 left-0 bg-red-500 p-4 w-24 h-24">ROJO</div>
+  <div class="absolute top-32 left-8 bg-green-500 p-4 w-24 h-24">VERDE</div>
+  <div class="absolute top-48 left-16 bg-orange-500 p-4 w-24 h-24">ANARANJADO</div>
+</div> -->
+

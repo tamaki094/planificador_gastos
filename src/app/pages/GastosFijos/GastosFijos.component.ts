@@ -95,7 +95,8 @@ export default class GastosFijosComponent implements OnInit {
     const gastoActualizado: Partial<Gasto> = {
       categoria_gasto: formData.categoria,
       name: formData.nombre,
-      monto: parseFloat(formData.monto)
+      monto: parseFloat(formData.monto),
+      fecha_actualizacion: new Date()
     };
 
     try {
@@ -134,7 +135,9 @@ export default class GastosFijosComponent implements OnInit {
       fecha_creacion: new Date(),
       monto: parseFloat(formData.monto),
       name: formData.nombre,
-      tipo_gasto: TipoGasto.FIJO
+      tipo_gasto: TipoGasto.FIJO,
+      usuario: (await this.authService.getCurrentUser())?.uid || 'desconocido',
+      fecha_actualizacion: new Date()
     };
 
     try {

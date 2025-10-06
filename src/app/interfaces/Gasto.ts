@@ -4,5 +4,7 @@ export interface Gasto {
   fecha_creacion: Date;          // Timestamp convertido a Date
   monto: number;                 // Cantidad del gasto
   name: string;                  // Nombre/descripción del gasto
-  tipo_gasto: number;            // Tipo de gasto (número)
+  tipo_gasto: number;       // Tipo de gasto (1: fijo, 2: variable)
+  usuario: string;
+  fecha_actualizacion: Date; // Fecha de actualización del gasto
 }

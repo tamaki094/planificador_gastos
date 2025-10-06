@@ -54,3 +54,98 @@ input[type="radio"]:checked + .btnCategoria:hover {
 .gasto_item:checked + label{
   @apply border-red-600 border-2 scale-98 transform transition-all duration-50;
 }
+
+
+/* Estilos para el slider */
+.slider {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* Track (la línea del slider) */
+.slider::-webkit-slider-track {
+  height: 12px;
+  background: linear-gradient(90deg, #e5e7eb 0%, #3b82f6 50%, #10b981 100%);
+  border-radius: 6px;
+}
+
+.slider::-moz-range-track {
+  height: 12px;
+  background: linear-gradient(90deg, #e5e7eb 0%, #3b82f6 50%, #10b981 100%);
+  border-radius: 6px;
+  border: none;
+}
+
+/* Thumb (el círculo que se mueve) */
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 24px;
+  width: 24px;
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+  transition: all 0.2s ease;
+}
+
+.slider::-moz-range-thumb {
+  height: 24px;
+  width: 24px;
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+  border: none;
+  transition: all 0.2s ease;
+}
+
+/* Hover effects */
+.slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.6);
+}
+
+.slider::-moz-range-thumb:hover {
+  transform: scale(1.2);
+  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.6);
+}
+
+.slider-custom {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.slider-custom::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 28px;
+  width: 28px;
+  background: linear-gradient(135deg, #ffffff, #f8fafc);
+  border: 3px solid #3b82f6;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 8px 16px rgba(59, 130, 246, 0.3);
+  transition: all 0.3s ease;
+}
+
+.slider-custom::-webkit-slider-thumb:hover {
+  transform: scale(1.3);
+  box-shadow: 0 12px 24px rgba(59, 130, 246, 0.5);
+  border-color: #1d4ed8;
+}
+
+.slider-custom::-webkit-slider-thumb:active {
+  transform: scale(1.1);
+}
+
+.slider-custom::-moz-range-thumb {
+  height: 28px;
+  width: 28px;
+  background: linear-gradient(135deg, #ffffff, #f8fafc);
+  border: 3px solid #3b82f6;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 8px 16px rgba(59, 130, 246, 0.3);
+  transition: all 0.3s ease;
+}
