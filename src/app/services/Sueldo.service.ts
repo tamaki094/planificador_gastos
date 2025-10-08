@@ -18,7 +18,9 @@ import {
   CollectionReference,
   Query,
   writeBatch,
-  WriteBatch
+  WriteBatch,
+  getDocs,
+  QuerySnapshot
 } from '@angular/fire/firestore';
 
 import { Observable } from 'rxjs';
@@ -56,15 +58,33 @@ export class SueldoService {
   }
 
 
-  async guardarSueldo(sueldo: Sueldo): Promise<any>{
-    const sueldoColeccion : CollectionReference<Sueldo> = collection(this.firestore, 'sueldo') as CollectionReference<Sueldo>;
-    const sueldoData = {
-      ...sueldo,
-      fecha_creacion: sueldo.fecha_creacion ? Timestamp.fromDate(sueldo.fecha_creacion) : Timestamp.now()
-    };
-    return await addDoc(sueldoColeccion, sueldoData);
-  }
+    async guardarSueldo(sueldo: Sueldo): Promise<boolean> {
+      try {
+        const sueldoColeccion: CollectionReference<Sueldo> = collection(this.firestore, 'sueldo') as CollectionReference<Sueldo>;
+        const sueldoQuery: Query<Sueldo> = query(sueldoColeccion, where('usuario', '==', sueldo.usuario)) as Query<Sueldo>;
 
 
+        const snapshot : QuerySnapshot<Sueldo> = await getDocs(sueldoQuery);
+
+        if (snapshot.size > 0) {
+          return false; // Ya existe un sueldo para este usuario
+        }
+
+        // Crear nuevo sueldo
+        const sueldoData = {
+          ...sueldo,
+          fecha_creacion: sueldo.fecha_creacion ? Timestamp.fromDate(sueldo.fecha_creacion) : Timestamp.now(),
+          fecha_actualizacion: Timestamp.now()
+        };
+
+        await addDoc(sueldoColeccion, sueldoData);
+        return true; // Sueldo creado exitosamente
+
+      }
+      catch (error) {
+        console.error('Error al guardar sueldo:', error);
+        return false;
+      }
+    }
 
 }
