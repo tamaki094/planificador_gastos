@@ -26,35 +26,40 @@ import {
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Sueldo } from '../interfaces';
+import { catchError, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SueldoService {
 
+
   firestore : Firestore = inject(Firestore);
 
-  /**
-   *  Obtiene el sueldo de un usuario por su ID
-   * @param userId
-   * @returns Observable<Sueldo | null>
-   */
+
+
+
   getSueldoByUser(userId: string): Observable<Sueldo | null> {
     const sueldoColeccion: CollectionReference<Sueldo> = collection(this.firestore, 'sueldo') as CollectionReference<Sueldo>;
-    const sueldoQuery : Query<Sueldo> = query(sueldoColeccion, where('usuario', '==', userId)) as Query<Sueldo>;
+    const sueldoQuery: Query<Sueldo> = query(sueldoColeccion, where('usuario', '==', userId)) as Query<Sueldo>;
 
-    return collectionData(sueldoQuery,{ idField: 'id'})
+    return collectionData(sueldoQuery, { idField: 'id' })
       .pipe(
         map((sueldos: any[]) => {
-           if (sueldos.length === 0) return null; // Default value
+          if (sueldos.length === 0) return null;
 
-        const sueldo = sueldos[0]; // First element
-        return {
-          ...sueldo,
-          fecha_creacion: sueldo.fecha_creacion?.toDate() || new Date()
-        };
-      })
-    ) as Observable<Sueldo | null>;
+          const sueldo = sueldos[0];
+          return {
+            ...sueldo,
+            fecha_creacion: sueldo.fecha_creacion?.toDate() || new Date(),
+            fecha_actualizacion: sueldo.fecha_actualizacion?.toDate() || new Date()
+          };
+        }),
+        catchError(error => {
+          console.error('Error al obtener sueldo:', error);
+          return of(null); // ✅ Retorna Observable que emite null
+        })
+      ) as Observable<Sueldo | null>;
   }
 
 

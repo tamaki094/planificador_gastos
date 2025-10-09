@@ -1,10 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, signal, Signal } from '@angular/core';
 import { NgForm, FormsModule} from '@angular/forms'
 import { SueldoService } from '../../services/Sueldo.service';
 import { Sueldo } from '../../interfaces';
 import { AuthService } from '../../services/Auth.service';
 import Swal from 'sweetalert2';
+import { map, tap } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-sueldo',
@@ -12,15 +14,42 @@ import Swal from 'sweetalert2';
   templateUrl: './Sueldo.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export default class SueldoComponent {
-  sueldo_monto: number = 12000;
+export default class SueldoComponent implements OnInit {
+
+  sueldo_monto = signal<number>(2000);
   sueldoService = inject(SueldoService);
-  authService = inject(AuthService);;
+  authService = inject(AuthService);
+  userId: string | undefined = undefined;
+  btnLabel = signal<string>('Guardar Sueldo');
+
+  async ngOnInit(): Promise<void> {
+    const user = await this.authService.getCurrentUser();
+    this.userId = user?.uid;
+
+    if (this.userId) {
+      try {
+        // ✅ CORRECTO: Convertir Observable a Promise
+        const sueldo = await firstValueFrom(
+          this.sueldoService.getSueldoByUser(this.userId)
+        );
+
+        if (sueldo) {
+          this.sueldo_monto.set(sueldo.sueldo);
+          this.btnLabel.set('Actualizar Sueldo');
+        }
+        else {
+          console.log('No se encontró sueldo para el usuario');
+        }
+      } catch (error) {
+        console.error('Error al obtener sueldo:', error);
+      }
+    }
+  }
 
   async guardarSueldo() {
     const su: Sueldo = {
       usuario: (await this.authService.getCurrentUser()?.uid) || 'desconocido',
-      sueldo: this.sueldo_monto,
+      sueldo: this.sueldo_monto(),
       fecha_creacion: new Date(),
       fecha_actualizacion: new Date()
     };

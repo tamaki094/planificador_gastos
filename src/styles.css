@@ -149,3 +149,35 @@ input[type="radio"]:checked + .btnCategoria:hover {
   box-shadow: 0 8px 16px rgba(59, 130, 246, 0.3);
   transition: all 0.3s ease;
 }
+
+
+.card-monto{
+  @apply relative shadow-lg rounded-lg p-6 h-50;
+}
+
+.card-monto div{
+  @apply absolute bottom-5 left-6 right-6 top-30;
+}
+
+
+.card-monto .porcentaje-monto{
+  @apply font-bold text-center block text-4xl;
+  @apply bg-gradient-to-r from-blue-600 to-green-400;
+  @apply bg-clip-text text-transparent;
+}
+
+.card-monto img{
+  @apply absolute bottom-3 right-4 w-30 h-30 opacity-20 z-1;
+}
+
+.card-monto .titulo{
+  @apply text-2xl font-bold mb-2 font-sans text-center;
+}
+
+.card-monto .titulo{
+  @apply text-2xl font-bold mb-2 font-sans text-center;
+}
+
+.card-monto .subtitulo{
+  @apply text-gray-600;
+}
