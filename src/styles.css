@@ -152,7 +152,7 @@ input[type="radio"]:checked + .btnCategoria:hover {
 
 
 .card-monto{
-  @apply relative shadow-lg rounded-lg p-6 h-50;
+  @apply relative shadow-lg rounded-lg p-5 h-50;
 }
 
 .card-monto div{
@@ -180,4 +180,13 @@ input[type="radio"]:checked + .btnCategoria:hover {
 
 .card-monto .subtitulo{
   @apply text-gray-600;
+}
+
+.img-card{
+  pointer-events: none;
+  user-select: none;
+}
+
+.slider-container{
+  @apply mt-3;
 }

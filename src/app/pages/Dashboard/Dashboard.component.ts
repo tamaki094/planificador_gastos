@@ -9,6 +9,7 @@ import { FormsModule } from '@angular/forms';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class DashboardComponent implements OnInit {
+
   montoAhorro = signal<number>(15);
   montoGastosVivir = signal<number>(75);
   montoProvisiones = signal<number>(5);
@@ -112,6 +113,10 @@ export default class DashboardComponent implements OnInit {
     if (total === 100) return 'text-green-600 font-bold';
     if (total > 100) return 'text-red-600 font-bold';
     return 'text-yellow-600 font-bold';
+  }
+
+  guardarCambios() {
+    throw new Error('Method not implemented.');
   }
 
 }
