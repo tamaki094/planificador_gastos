@@ -31,4 +31,20 @@ export class MontosService {
   private firestore : Firestore = inject(Firestore);
 
 
+  async guardarMontos(montos :Montos): Promise<boolean>{
+    try {
+      const montosColeccion : CollectionReference<Montos> = collection(this.firestore, 'montos') as CollectionReference<Montos>;
+      const montoData = {
+        ...montos,
+        fecha_creacion: Timestamp.now(),
+        fecha_actualizacion: Timestamp.now()
+      };
+      await addDoc(montosColeccion, montoData);
+      return true;
+    }
+    catch(error){
+      console.error('Error al guardar montos:', error);
+      return false;
+    }
+  }
 }

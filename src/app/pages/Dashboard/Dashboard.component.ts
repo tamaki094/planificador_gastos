@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ElementRef, OnInit, signal, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { MontosService } from '../../services/Montos.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -19,6 +20,8 @@ export default class DashboardComponent implements OnInit {
   @ViewChild('gastosSlider') gastosSlider!: ElementRef<HTMLInputElement>;
   @ViewChild('provisionesSlider') provisionesSlider!: ElementRef<HTMLInputElement>;
   @ViewChild('playSlider') playSlider!: ElementRef<HTMLInputElement>;
+
+  montosService = inject(MontosService);
 
 
   ngOnInit() {
@@ -116,7 +119,17 @@ export default class DashboardComponent implements OnInit {
   }
 
   guardarCambios() {
-    throw new Error('Method not implemented.');
+
+    let montos = {
+      ahorro: this.montoAhorro(),
+      gastos_vivir: this.montoGastosVivir(),
+      provisiones: this.montoProvisiones(),
+      play: this.montoPlay(),
+      usuario: 'usuario_ejemplo', // Reemplaza con el ID del usuario actual
+      fecha_creacion: new Date(),
+      fecha_actualizacion: new Date()
+    };
+    this.montosService.guardarMontos(montos);
   }
 
 }
