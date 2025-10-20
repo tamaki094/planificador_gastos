@@ -36,9 +36,6 @@ export class SueldoService {
 
   firestore : Firestore = inject(Firestore);
 
-
-
-
   getSueldoByUser(userId: string): Observable<Sueldo | null> {
     const sueldoColeccion: CollectionReference<Sueldo> = collection(this.firestore, 'sueldo') as CollectionReference<Sueldo>;
     const sueldoQuery: Query<Sueldo> = query(sueldoColeccion, where('usuario', '==', userId)) as Query<Sueldo>;
@@ -72,7 +69,8 @@ export class SueldoService {
         const snapshot : QuerySnapshot<Sueldo> = await getDocs(sueldoQuery);
 
         if (snapshot.size > 0) {
-          return false; // Ya existe un sueldo para este usuario
+
+          await updateDoc
         }
 
         // Crear nuevo sueldo

@@ -1,7 +1,26 @@
 <form #montosForm="ngForm">
-  <div class="container mx-auto p-6 bg-gray-400 rounded-2xl shadow-lg">
+  <div id="seccion-distribucion" class="seccion-dashboard bg-gray-400"
+    [ngClass]="{
+      'h-20': minimizedDistribucion(),
+      'h-auto': !minimizedDistribucion()
+    }">
+
     <div class="grid grid-cols-4 gap-6">
-      <div id="card-ahorro" class="card-monto bg-amber-200">
+      <div class="col-span-4 mb-6">
+        <span class="text-3xl font-bold">💼 Distribución de tu sueldo mensual</span>
+        <button id="minimize-button"
+                class="hover:scale-90 text-gray-800 font-bold rounded inline-flex items-center float-right -mt-4 -mr-5 transition-transform duration-200"
+                (click)="toggleMinimize('seccion-distribucion')">
+          <img src="minimize.svg" alt="Minimizar" class="w-5 h-5 mr-2">
+        </button>
+      </div>
+
+      <div id="card-ahorro"
+           class="card-monto bg-amber-200 transition-all duration-500"
+           [ngClass]="{
+            'fade-minimize-hidden': minimizedDistribucion(),
+            'fade-minimize-visible': !minimizedDistribucion()
+        }">
         <span class="titulo">Ahorro</span>
         <p class="subtitulo">Monto de tu sueldo que deseas ahorrar</p>
         <div class="slider-container">
@@ -19,7 +38,12 @@
         <img src="ahorro.svg" alt="Icono de ahorro" class="img-card">
       </div>
 
-      <div id="card-gastos" class="card-monto bg-blue-200">
+      <div id="card-gastos"
+           class="card-monto bg-blue-200 transition-all duration-500"
+          [ngClass]="{
+            'fade-minimize-hidden': minimizedDistribucion(),
+            'fade-minimize-visible': !minimizedDistribucion()
+        }">
         <span class="titulo">Gastos necesarios para vivir</span>
         <p class="subtitulo">Monto de tus gastos necesarios para vivir</p>
         <div class="slider-container">
@@ -37,7 +61,12 @@
         <img src="family.svg" alt="Icono de familia" class="img-card">
       </div>
 
-      <div id="card-provisiones" class="card-monto bg-red-200">
+      <div id="card-provisiones"
+           class="card-monto bg-red-200 transition-all duration-500"
+           [ngClass]="{
+            'fade-minimize-hidden': minimizedDistribucion(),
+            'fade-minimize-visible': !minimizedDistribucion()
+        }">
         <span class="titulo">Provisiones</span>
         <p class="subtitulo">Monto destinado a provisiones y emergencias</p>
         <div class="slider-container">
@@ -55,7 +84,12 @@
         <img src="provision.svg" alt="Icono de provisiones" class="img-card">
       </div>
 
-      <div id="card-ocio" class="card-monto bg-green-300">
+      <div id="card-ocio"
+           class="card-monto bg-green-300 transition-all duration-500"
+           [ngClass]="{
+            'fade-minimize-hidden': minimizedDistribucion(),
+            'fade-minimize-visible': !minimizedDistribucion()
+        }">
         <span class="titulo">Monto Play</span>
         <p class="subtitulo">Monto destinado a entretenimiento y ocio</p>
         <div class="slider-container">
@@ -73,26 +107,57 @@
       </div>
     </div>
 
-    <div class="flex justify-center mt-8">
-</div>
-@if(getTotal() == 100){
-  <div class="flex justify-center mt-8">
-    <button
-      type="button"
-      (click)="guardarCambios()"
-      class="bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900
-             text-white font-bold py-4 px-8 rounded-xl shadow-lg hover:shadow-xl
-             transform hover:scale-105 transition-all duration-300
-             flex items-center space-x-2 text-lg">
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-              d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3-3m0 0l-3 3m3-3v12"></path>
-      </svg>
-      <span>Guardar Cambios</span>
-    </button>
-  </div>
-}
-    <span class="{{ getTotalClass() }} text-5xl font-bold -mt-10 font-sans text-center absolute">{{ getTotal() }} %</span>
+    @if(getTotal() == 100){
+      <div class="flex justify-center mt-8 transition-all duration-500"
+           [ngClass]="{
+             'opacity-0 translate-y-4': minimizedDistribucion(),
+             'opacity-100 translate-y-0': !minimizedDistribucion()
+           }">
+        <button
+          type="button"
+          (click)="guardarCambios()"
+          class="bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900
+                 text-white font-bold py-4 px-8 rounded-xl shadow-lg hover:shadow-xl
+                 transform hover:scale-105 transition-all duration-300
+                 flex items-center space-x-2 text-lg">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3-3m0 0l-3 3m3-3v12"></path>
+          </svg>
+          <span>Guardar Cambios</span>
+        </button>
+      </div>
+    }
+    <div class="flex ">
+      <span class="{{ getTotalClass() }} text-5xl font-bold font-sans text-center transition-all duration-500"
+              [ngClass]="{
+          'slide-minimize-hidden': minimizedDistribucion(),
+          'slide-minimize-visible': !minimizedDistribucion()
+        }">
+        {{ getTotal() }} %
+      </span>
+    </div>
+
   </div>
 </form>
 
+<div id="seccion-gastos" class="seccion-dashboard bg-red-400"
+  [ngClass]="{
+      'h-20': minimizedGastos(),
+      'h-auto': !minimizedGastos()
+    }">
+  <div class="grid grid-cols-4 gap-6">
+      <div class="col-span-4 mb-6">
+        <span class="text-3xl font-bold"> 🪙 Gastos </span>
+        <button id="minimize-button"
+                class="hover:scale-90 text-gray-800 font-bold rounded inline-flex items-center float-right -mt-4 -mr-5 transition-transform duration-200"
+                (click)="toggleMinimize('seccion-gastos')">
+          <img src="minimize.svg" alt="Minimizar" class="w-5 h-5 mr-2">
+        </button>
+      </div>
+      <div class="col-span-4">
+        @for (item of gastos(); track $index) {
+          <gasto-item [gasto]="item"></gasto-item>
+        }
+    </div>
+</div>

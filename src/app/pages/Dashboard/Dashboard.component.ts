@@ -2,30 +2,61 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, ElementRef, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MontosService } from '../../services/Montos.service';
+import { AuthService } from '../../services/Auth.service';
+import { User } from 'firebase/auth';
+import { Gasto } from '../../interfaces';
+import { GastoService } from '../../services/Gasto.service';
+import { GastoItemComponent } from "../../components/GastoItem/gasto-item.component";
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, GastoItemComponent],
   templateUrl: './Dashboard.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class DashboardComponent implements OnInit {
 
+
   montoAhorro = signal<number>(15);
   montoGastosVivir = signal<number>(75);
   montoProvisiones = signal<number>(5);
   montoPlay = signal<number>(5);
+  minimizedDistribucion = signal(false);
+  minimizedGastos = signal(false);
+  gastos = signal<Gasto[]>([]);
+
+  montosService = inject(MontosService);
+  authService = inject(AuthService);
+  gastosService = inject(GastoService);
+
+  user : User | null = null;
 
   @ViewChild('ahorroSlider') ahorroSlider!: ElementRef<HTMLInputElement>;
   @ViewChild('gastosSlider') gastosSlider!: ElementRef<HTMLInputElement>;
   @ViewChild('provisionesSlider') provisionesSlider!: ElementRef<HTMLInputElement>;
   @ViewChild('playSlider') playSlider!: ElementRef<HTMLInputElement>;
 
-  montosService = inject(MontosService);
 
 
-  ngOnInit() {
-    // Aquí puedes realizar alguna acción al inicializar el componente
+
+  async ngOnInit() {
+    this.user = await this.authService.getCurrentUser();
+    this.montosService.consultaMontosPorUsuario(this.user?.uid || '').subscribe(
+      (montos) => {
+        console.log(`Montos obtenidos de  ${this.user?.uid}: ${montos}`);
+        this.montoAhorro.set(montos?.ahorro || 0);
+        this.montoGastosVivir.set(montos?.gastos_vivir || 0);
+        this.montoProvisiones.set(montos?.provisiones || 0);
+        this.montoPlay.set(montos?.play || 0);
+      }
+    );
+    this.gastosService.getAllGastosByUser(this.user?.uid || '').subscribe(
+      (gastos) => {
+        if (gastos) {
+          this.gastos.set(gastos);
+        }
+      }
+    );
   }
 
    onAhorroChange(event: Event) {
@@ -125,12 +156,33 @@ export default class DashboardComponent implements OnInit {
       gastos_vivir: this.montoGastosVivir(),
       provisiones: this.montoProvisiones(),
       play: this.montoPlay(),
-      usuario: 'usuario_ejemplo', // Reemplaza con el ID del usuario actual
+      usuario: this.user?.uid || 'desconocido',
       fecha_creacion: new Date(),
       fecha_actualizacion: new Date()
     };
     this.montosService.guardarMontos(montos);
   }
 
+  toggleMinimize(seccion: string | HTMLElement) {
+    let seccionId: string;
+
+    if (typeof seccion === 'string') {
+      seccionId = seccion;
+    }
+    else {
+      seccionId = seccion.id || seccion.getAttribute('id') || '';
+    }
+
+    switch(seccionId) {
+      case 'seccion-distribucion':
+        this.minimizedDistribucion.set(!this.minimizedDistribucion());
+        break;
+      case 'seccion-gastos':
+        this.minimizedGastos.set(!this.minimizedGastos());
+        break;
+      default:
+        console.warn('Sección no encontrada:', seccionId);
+    }
+  }
 }
 

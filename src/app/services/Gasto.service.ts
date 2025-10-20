@@ -30,7 +30,23 @@ import { Gasto } from '../interfaces';
 export class GastoService {
 
 
+
   firestore : Firestore = inject(Firestore);
+
+
+   getAllGastosByUser(userId: string): Observable<Gasto[]> {
+    const gastosColeccion: CollectionReference<Gasto> = collection(this.firestore, 'gastos') as CollectionReference<Gasto>;
+    const gastosQuery: Query<Gasto> = query(gastosColeccion, where('usuario', '==', userId)) as Query<Gasto>;
+
+    return collectionData(gastosQuery, { idField: 'id' })
+      .pipe(
+        map((gastos: any[]) => gastos.map(gasto => ({
+          ...gasto,
+          fecha_creacion: gasto.fecha_creacion?.toDate() || new Date()
+        })))
+      ) as Observable<Gasto[]>;
+  }
+
 
   /**
    * Obtiene todos los gastos desde Firestore
