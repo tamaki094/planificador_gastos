@@ -17,12 +17,18 @@ import { GastoItemComponent } from "../../components/GastoItem/gasto-item.compon
 export default class DashboardComponent implements OnInit {
 
 
-  montoAhorro = signal<number>(15);
-  montoGastosVivir = signal<number>(75);
-  montoProvisiones = signal<number>(5);
-  montoPlay = signal<number>(5);
+
+  montoAhorro = signal<number>(0);
+  montoGastosVivir = signal<number>(0);
+  montoProvisiones = signal<number>(0);
+  montoPlay = signal<number>(0);
+  montoSueldoAhorro = signal<number>(0);
+  montoSueldoGastosVivir = signal<number>(0);
+  montoSueldoProvisiones = signal<number>(0);
+  montoSueldoPlay = signal<number>(0);
   minimizedDistribucion = signal(false);
   minimizedGastos = signal(false);
+  minimizedSueldos = signal(false);
   gastos = signal<Gasto[]>([]);
 
   montosService = inject(MontosService);
@@ -48,6 +54,7 @@ export default class DashboardComponent implements OnInit {
         this.montoGastosVivir.set(montos?.gastos_vivir || 0);
         this.montoProvisiones.set(montos?.provisiones || 0);
         this.montoPlay.set(montos?.play || 0);
+        this.calcularMontosSueldos();
       }
     );
     this.gastosService.getAllGastosByUser(this.user?.uid || '').subscribe(
@@ -57,6 +64,7 @@ export default class DashboardComponent implements OnInit {
         }
       }
     );
+
   }
 
    onAhorroChange(event: Event) {
@@ -183,6 +191,28 @@ export default class DashboardComponent implements OnInit {
       default:
         console.warn('Sección no encontrada:', seccionId);
     }
+  }
+
+  calcularTotalGastos(): number {
+    return this.gastos().reduce((total, gasto) => total + gasto.monto, 0);
+  }
+
+
+  calcularMontosSueldos() {
+    const totalMontos = this.calcularTotalGastos();
+    const totalSueldos = 38000;
+
+    this.montoSueldoAhorro.set((this.montoAhorro() / 100) * totalSueldos);
+    this.montoSueldoGastosVivir.set((this.montoGastosVivir() / 100) * totalSueldos);
+    this.montoSueldoProvisiones.set((this.montoProvisiones() / 100) * totalSueldos);
+    this.montoSueldoPlay.set((this.montoPlay() / 100) * totalSueldos);
+
+    console.log('Total Sueldos:', totalSueldos);
+    console.log('Monto Ahorro %:', this.montoAhorro());
+    console.log('Monto Gastos Vivir %:', this.montoGastosVivir());
+    console.log('Monto Provisiones %:', this.montoProvisiones());
+    console.log('Monto Play %:', this.montoPlay());
+
   }
 }
 

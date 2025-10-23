@@ -141,23 +141,64 @@
   </div>
 </form>
 
-<div id="seccion-gastos" class="seccion-dashboard bg-red-400"
-  [ngClass]="{
-      'h-20': minimizedGastos(),
-      'h-auto': !minimizedGastos()
-    }">
-  <div class="grid grid-cols-4 gap-6">
-      <div class="col-span-4 mb-6">
-        <span class="text-3xl font-bold"> 🪙 Gastos </span>
-        <button id="minimize-button"
-                class="hover:scale-90 text-gray-800 font-bold rounded inline-flex items-center float-right -mt-4 -mr-5 transition-transform duration-200"
-                (click)="toggleMinimize('seccion-gastos')">
-          <img src="minimize.svg" alt="Minimizar" class="w-5 h-5 mr-2">
-        </button>
+<div id="seccion-gastos" class="seccion-dashboard bg-red-400 col-span-4 transition-all duration-500 "
+     [ngClass]="{
+       'h-20': minimizedGastos(),
+       'h-auto': !minimizedGastos()
+     }">
+
+  <div class="col-span-4 mb-6">
+    <span class="text-3xl font-bold">👛 Gastos Fijos</span>
+    <button id="minimize-button"
+            class="hover:scale-90 text-gray-800 font-bold rounded inline-flex items-center float-right -mt-4 -mr-5 transition-transform duration-200"
+            (click)="toggleMinimize('seccion-gastos')">
+      <img src="minimize.svg" alt="Minimizar" class="w-5 h-5 mr-2">
+    </button>
+  </div>
+
+  <!-- ✅ Grid fijo de 4 columnas -->
+  <div class="grid grid-cols-8 gap-8">
+    @for (item of gastos(); track $index) {
+      <gasto-item [gasto]="item"></gasto-item>
+    }
+
+    @empty {
+      <div class="col-span-4 text-center py-8">
+        <p class="text-gray-600">No tienes gastos registrados</p>
       </div>
-      <div class="col-span-4">
-        @for (item of gastos(); track $index) {
-          <gasto-item [gasto]="item"></gasto-item>
-        }
+    }
+  </div>
+  <div class="">
+    <hr class="my-6 border-gray-300">
+    <div id="div-total">
+      <span class="text-xl font-bold">Total Gastos: </span>
+      <span class="text-xl font-bold text-green-700">
+        {{ calcularTotalGastos() | currency:'MXN':'symbol':'1.2-2' }}
+      </span>
     </div>
+  </div>
+
+</div>
+
+
+<div id="seccion-sueldo-montos" class="seccion-dashboard bg-green-400 col-span-4 transition-all duration-500 "
+     [ngClass]="{
+       'h-20': minimizedSueldos(),
+       'h-auto': !minimizedSueldos()
+     }">
+
+  <div class="col-span-4 mb-6">
+    <span class="text-3xl font-bold">🧮 Sueldo por montos</span>
+    <button id="minimize-button"
+            class="hover:scale-90 text-gray-800 font-bold rounded inline-flex items-center float-right -mt-4 -mr-5 transition-transform duration-200"
+            (click)="toggleMinimize('seccion-sueldo-montos')">
+      <img src="minimize.svg" alt="Minimizar" class="w-5 h-5 mr-2">
+    </button>
+  </div>
+  <div>
+    <span><h3>Ahorro:</h3> {{ montoSueldoAhorro() | currency:'MXN':'symbol':'1.2-2' }}</span> <br>
+    <span><h3>Gastos Vivir:</h3> {{ montoSueldoGastosVivir() | currency:'MXN':'symbol':'1.2-2' }}</span>  <br>
+    <span><h3>Provisiones:</h3> {{ montoSueldoProvisiones() | currency:'MXN':'symbol':'1.2-2' }}</span>  <br>
+    <span><h3>Play:</h3> {{ montoSueldoPlay() | currency:'MXN':'symbol':'1.2-2' }}</span>  <br>
+  </div>
 </div>

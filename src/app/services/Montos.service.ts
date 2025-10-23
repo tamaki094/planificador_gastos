@@ -33,27 +33,27 @@ export class MontosService {
   readonly COLECCION = 'montos' as const;
 
   consultaMontosPorUsuario(usuarioId: string): Observable<Montos | null> {
-  const monto: CollectionReference<Montos> = collection(this.firestore, this.COLECCION) as CollectionReference<Montos>;
-  const montoQuery: Query<Montos> = query(monto, where('usuario', '==', usuarioId)) as Query<Montos>;
+    const monto: CollectionReference<Montos> = collection(this.firestore, this.COLECCION) as CollectionReference<Montos>;
+    const montoQuery: Query<Montos> = query(monto, where('usuario', '==', usuarioId)) as Query<Montos>;
 
-  return collectionData(montoQuery, { idField: 'id' })
-    .pipe(
-      switchMap((montos: any[]) => {
-        if (montos.length === 0) {
-          return of(null); // ✅ Retorna Observable de null
-        }
+    return collectionData(montoQuery, { idField: 'id' })
+      .pipe(
+        switchMap((montos: any[]) => {
+          if (montos.length === 0) {
+            return of(null); // ✅ Retorna Observable de null
+          }
 
-        const primerMonto = montos[0];
-        console.log(`Monto obtenido de ${usuarioId}:`, primerMonto);
+          const primerMonto = montos[0];
+          console.log(`Monto obtenido de ${usuarioId}:`, primerMonto);
 
-        return of({
-          ...primerMonto,
-          fecha_creacion: primerMonto.fecha_creacion?.toDate() || new Date(),
-          fecha_actualizacion: primerMonto.fecha_actualizacion?.toDate() || new Date()
-        });
-      })
-    );
-}
+          return of({
+            ...primerMonto,
+            fecha_creacion: primerMonto.fecha_creacion?.toDate() || new Date(),
+            fecha_actualizacion: primerMonto.fecha_actualizacion?.toDate() || new Date()
+          });
+        })
+      );
+  }
 
 
   async guardarMontos(montos :Montos): Promise<boolean>{

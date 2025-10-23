@@ -1,6 +1,7 @@
-<div class="gasto-item bg-amber-300 shadow-md rounded-lg p-4 mb-4 flex items-center justify-between">
-  <span class="">{{ gasto.name }}</span>
-  <img [src]="getImagenCategoria()" alt="Icono de {{ gasto.categoria_gasto }}" class="w-8 h-8" />
-  <span class="">{{ gasto.categoria_gasto }}</span>
+<div class="gasto-item bg-amber-300 shadow-md rounded-lg p-4 aspect-square flex flex-col items-center justify-center text-center hover:shadow-lg shadow-gray-800 transition-shadow cursor-pointer">
+  <img [src]="getImagenCategoria()" alt="Icono de {{ gasto.categoria_gasto }}" class="w-8 h-8 " />
+  <span class="font-bold text-lg text-green-700"> {{ gasto.monto | currency:'MXN':'symbol':'1.2-2' }} </span>
+  <span class="text-gray-800 font-light uppercase">{{ gasto.name }}</span>
 </div>
+
 

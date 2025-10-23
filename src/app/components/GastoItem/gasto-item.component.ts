@@ -1,9 +1,11 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { Gasto } from '../../interfaces';
+import { CurrencyPipe } from '@angular/common';
+
 
 @Component({
   selector: 'gasto-item',
-  imports: [],
+  imports: [CurrencyPipe],
   templateUrl: './gasto-item.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -23,8 +25,12 @@ export class GastoItemComponent {
         return 'salud.svg';
       case 'educacion':
         return 'educacion.svg';
-      case 'hogar':
-        return 'hogar.svg';
+      case 'mascotas':
+        return 'mascotas.svg';
+      case 'vivienda':
+        return 'casa.svg';
+      case 'servicios':
+        return 'servicios.svg';
       default:
         return 'default.svg';
     }
