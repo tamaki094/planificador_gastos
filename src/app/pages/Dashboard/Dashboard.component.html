@@ -195,10 +195,42 @@
       <img src="minimize.svg" alt="Minimizar" class="w-5 h-5 mr-2">
     </button>
   </div>
-  <div>
-    <span><h3>Ahorro:</h3> {{ montoSueldoAhorro() | currency:'MXN':'symbol':'1.2-2' }}</span> <br>
-    <span><h3>Gastos Vivir:</h3> {{ montoSueldoGastosVivir() | currency:'MXN':'symbol':'1.2-2' }}</span>  <br>
-    <span><h3>Provisiones:</h3> {{ montoSueldoProvisiones() | currency:'MXN':'symbol':'1.2-2' }}</span>  <br>
-    <span><h3>Play:</h3> {{ montoSueldoPlay() | currency:'MXN':'symbol':'1.2-2' }}</span>  <br>
+  <div class="grid grid-cols-1 gap-6">
+
+   <monto-sueldo-item
+  [porcentajeMonto]="montos()!.ahorro"
+  [sueldo]="sueldo()!"
+  categoria="Ahorro"
+  (sueldoRestanteChange)="onSueldoRestanteChange('ahorro', $event)">
+</monto-sueldo-item>
+
+<monto-sueldo-item
+  [porcentajeMonto]="montos()!.gastos_vivir"
+  [sueldo]="sueldo()!"
+  [sumaGastos]="calcularTotalGastos()"
+  categoria="Gastos Para Vivir"
+  (sueldoRestanteChange)="onSueldoRestanteChange('gastos_vivir', $event)">
+</monto-sueldo-item>
+
+<monto-sueldo-item
+  [porcentajeMonto]="montos()!.provisiones"
+  [sueldo]="sueldo()!"
+  categoria="Provisiones"
+  (sueldoRestanteChange)="onSueldoRestanteChange('provisiones', $event)">
+</monto-sueldo-item>
+
+<monto-sueldo-item
+  [porcentajeMonto]="montos()!.play"
+  [sueldo]="sueldo()!"
+  categoria="Monto Play"
+  (sueldoRestanteChange)="onSueldoRestanteChange('play', $event)">
+</monto-sueldo-item>
+
+<div class="mt-6 p-4 bg-white rounded-lg shadow">
+  <h3 class="text-lg font-bold">💰 Total Sueldo Restante:</h3>
+  <span class="text-2xl font-bold text-green-600">
+    {{ totalSueldoRestante() | currency:'MXN':'symbol':'1.2-2' }}
+  </span>
+</div>
   </div>
 </div>

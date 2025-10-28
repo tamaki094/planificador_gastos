@@ -1,16 +1,18 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ElementRef, inject, OnInit, signal, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, ElementRef, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MontosService } from '../../services/Montos.service';
 import { AuthService } from '../../services/Auth.service';
 import { User } from 'firebase/auth';
-import { Gasto } from '../../interfaces';
+import { Gasto, Montos, Sueldo } from '../../interfaces';
 import { GastoService } from '../../services/Gasto.service';
 import { GastoItemComponent } from "../../components/GastoItem/gasto-item.component";
+import { MontoSueldoItem } from "../../components/MontoSueldoItem/monto-sueldo-item";
+import { SueldoService } from '../../services/Sueldo.service';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule, FormsModule, GastoItemComponent],
+  imports: [CommonModule, FormsModule, GastoItemComponent, MontoSueldoItem],
   templateUrl: './Dashboard.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -30,33 +32,70 @@ export default class DashboardComponent implements OnInit {
   minimizedGastos = signal(false);
   minimizedSueldos = signal(false);
   gastos = signal<Gasto[]>([]);
+  montos = signal<Montos | null>(null);
+  sueldo = signal<Sueldo | null>(null);
+  sueldoRestanteTotal = signal<number>(0);
+
 
   montosService = inject(MontosService);
   authService = inject(AuthService);
   gastosService = inject(GastoService);
+  sueldoService = inject(SueldoService);
 
   user : User | null = null;
+
 
   @ViewChild('ahorroSlider') ahorroSlider!: ElementRef<HTMLInputElement>;
   @ViewChild('gastosSlider') gastosSlider!: ElementRef<HTMLInputElement>;
   @ViewChild('provisionesSlider') provisionesSlider!: ElementRef<HTMLInputElement>;
   @ViewChild('playSlider') playSlider!: ElementRef<HTMLInputElement>;
 
+  sueldosRestantes = signal<{[key: string]: number}>({
+    ahorro: 0,
+    gastos_vivir: 0,
+    provisiones: 0,
+    play: 0
+  });
 
+   // ✅ Computed para la suma total
+  totalSueldoRestante = computed(() => {
+    const restantes = this.sueldosRestantes();
+    return Object.values(restantes).reduce((total, valor) => total + valor, 0);
+  });
+
+  onSueldoRestanteChange(categoria: string, valor: number) {
+    this.sueldosRestantes.update(restantes => ({
+      ...restantes,
+      [categoria]: valor
+    }));
+    console.log(`Sueldo restante ${categoria}:`, valor);
+    console.log('Total sueldo restante:', this.totalSueldoRestante());
+  }
 
 
   async ngOnInit() {
     this.user = await this.authService.getCurrentUser();
     this.montosService.consultaMontosPorUsuario(this.user?.uid || '').subscribe(
       (montos) => {
-        console.log(`Montos obtenidos de  ${this.user?.uid}: ${montos}`);
-        this.montoAhorro.set(montos?.ahorro || 0);
-        this.montoGastosVivir.set(montos?.gastos_vivir || 0);
-        this.montoProvisiones.set(montos?.provisiones || 0);
-        this.montoPlay.set(montos?.play || 0);
-        this.calcularMontosSueldos();
+        this.montos.set(montos);
+        if(montos){
+          console.log(`Montos obtenidos de  ${this.user?.uid}: ${montos}`);
+          this.montoAhorro.set(montos?.ahorro || 0);
+          this.montoGastosVivir.set(montos?.gastos_vivir || 0);
+          this.montoProvisiones.set(montos?.provisiones || 0);
+          this.montoPlay.set(montos?.play || 0);
+
+        }
+
       }
     );
+
+    this.sueldoService.getSueldoByUser(this.user?.uid || '')
+      .subscribe((sueldo) =>{
+        this.sueldo.set(sueldo);
+        console.log(`Sueldo obtenido de  ${this.user?.uid}: ${this.sueldo()}`);
+    });
+
     this.gastosService.getAllGastosByUser(this.user?.uid || '').subscribe(
       (gastos) => {
         if (gastos) {
@@ -66,8 +105,12 @@ export default class DashboardComponent implements OnInit {
     );
 
   }
+  datosListos = computed(() => {
+    return this.montos() !== null && this.sueldo() !== null;
+  });
 
-   onAhorroChange(event: Event) {
+
+  onAhorroChange(event: Event) {
     const nuevoValor = parseInt((event.target as HTMLInputElement).value);
     const otrosValores = this.montoGastosVivir() + this.montoProvisiones() + this.montoPlay();
 
@@ -199,19 +242,19 @@ export default class DashboardComponent implements OnInit {
 
 
   calcularMontosSueldos() {
-    const totalMontos = this.calcularTotalGastos();
-    const totalSueldos = 38000;
+    // const totalMontos = this.calcularTotalGastos();
+    // const totalSueldos = 38000;
 
-    this.montoSueldoAhorro.set((this.montoAhorro() / 100) * totalSueldos);
-    this.montoSueldoGastosVivir.set((this.montoGastosVivir() / 100) * totalSueldos);
-    this.montoSueldoProvisiones.set((this.montoProvisiones() / 100) * totalSueldos);
-    this.montoSueldoPlay.set((this.montoPlay() / 100) * totalSueldos);
+    // this.montoSueldoAhorro.set((this.montoAhorro() / 100) * totalSueldos);
+    // this.montoSueldoGastosVivir.set((this.montoGastosVivir() / 100) * totalSueldos);
+    // this.montoSueldoProvisiones.set((this.montoProvisiones() / 100) * totalSueldos);
+    // this.montoSueldoPlay.set((this.montoPlay() / 100) * totalSueldos);
 
-    console.log('Total Sueldos:', totalSueldos);
-    console.log('Monto Ahorro %:', this.montoAhorro());
-    console.log('Monto Gastos Vivir %:', this.montoGastosVivir());
-    console.log('Monto Provisiones %:', this.montoProvisiones());
-    console.log('Monto Play %:', this.montoPlay());
+    // console.log('Total Sueldos:', totalSueldos);
+    // console.log('Monto Ahorro %:', this.montoAhorro());
+    // console.log('Monto Gastos Vivir %:', this.montoGastosVivir());
+    // console.log('Monto Provisiones %:', this.montoProvisiones());
+    // console.log('Monto Play %:', this.montoPlay());
 
   }
 }
