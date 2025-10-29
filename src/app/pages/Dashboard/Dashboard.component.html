@@ -196,36 +196,62 @@
     </button>
   </div>
   <div class="grid grid-cols-1 gap-6">
+@defer (when montos() && sueldo() && sueldo()?.sueldo) {
+  <monto-sueldo-item
+    [categoria]="'ahorro'"
+    [porcentajeMonto]="montoAhorro()"
+    [sueldo]="sueldo()!"
+    [sumaGastos]="0"
+    (sueldoRestante)="onSueldoRestanteChange($event)"  />
 
-   <monto-sueldo-item
-  [porcentajeMonto]="montos()!.ahorro"
-  [sueldo]="sueldo()!"
-  categoria="Ahorro"
-  (sueldoRestanteChange)="onSueldoRestanteChange('ahorro', $event)">
-</monto-sueldo-item>
+  <monto-sueldo-item
+    [categoria]="'gastos_vivir'"
+    [porcentajeMonto]="montoGastosVivir()"
+    [sueldo]="sueldo()!"
+    [sumaGastos]="calcularTotalGastos()"
+    (sueldoRestante)="onSueldoRestanteChange($event)"  />
+  <monto-sueldo-item
+    [categoria]="'provisiones'"
+    [porcentajeMonto]="montoProvisiones()"
+    [sueldo]="sueldo()!"
+    [sumaGastos]="0"
+    (sueldoRestante)="onSueldoRestanteChange($event)" />
 
-<monto-sueldo-item
-  [porcentajeMonto]="montos()!.gastos_vivir"
-  [sueldo]="sueldo()!"
-  [sumaGastos]="calcularTotalGastos()"
-  categoria="Gastos Para Vivir"
-  (sueldoRestanteChange)="onSueldoRestanteChange('gastos_vivir', $event)">
-</monto-sueldo-item>
+  <monto-sueldo-item
+    [categoria]="'play'"
+    [porcentajeMonto]="montoPlay()"
+    [sueldo]="sueldo()!"
+    [sumaGastos]="0"
+    (sueldoRestante)="onSueldoRestanteChange($event)" />
 
-<monto-sueldo-item
-  [porcentajeMonto]="montos()!.provisiones"
-  [sueldo]="sueldo()!"
-  categoria="Provisiones"
-  (sueldoRestanteChange)="onSueldoRestanteChange('provisiones', $event)">
-</monto-sueldo-item>
+} @placeholder {
+  <!-- ✅ Se muestra mientras se espera la condición -->
+  <div class="text-center py-8">
+    <div class="animate-pulse space-y-4">
+      @for (i of [1,2,3,4]; track i) {
+        <div class="bg-gray-300 h-20 rounded-lg"></div>
+      }
+    </div>
+    <p class="text-white mt-4">⏳ Cargando información del sueldo...</p>
+  </div>
 
-<monto-sueldo-item
-  [porcentajeMonto]="montos()!.play"
-  [sueldo]="sueldo()!"
-  categoria="Monto Play"
-  (sueldoRestanteChange)="onSueldoRestanteChange('play', $event)">
-</monto-sueldo-item>
+} @loading {
+  <!-- ✅ Se muestra durante la carga de los componentes -->
+  <div class="text-center py-4">
+    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto"></div>
+    <p class="text-white text-sm mt-2">Preparando componentes...</p>
+  </div>
 
+} @error {
+  <!-- ✅ Se muestra si hay error -->
+  <div class="text-center py-8">
+    <p class="text-red-600 font-bold">❌ Error al cargar los componentes de sueldo</p>
+    <button (click)="ngOnInit()"
+            class="mt-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+      🔄 Reintentar
+    </button>
+  </div>
+}
 <div class="mt-6 p-4 bg-white rounded-lg shadow">
   <h3 class="text-lg font-bold">💰 Total Sueldo Restante:</h3>
   <span class="text-2xl font-bold text-green-600">

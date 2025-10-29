@@ -12,7 +12,7 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-gastos-fijos',
   imports: [CommonModule, FormsModule],
-  templateUrl: './GastosFijos.component.html',
+  templateUrl: './gastos-fijos.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class GastosFijosComponent implements OnInit {
@@ -38,7 +38,7 @@ export default class GastosFijosComponent implements OnInit {
       if(user){
         console.log('🔍 Auth state changed in GastosFijosComponent:', user);
 
-        this.gastoService.getAllGastos().subscribe((gastos : Gasto[])=> {
+        this.gastoService.getAllGastos(true).subscribe((gastos : Gasto[])=> {
           console.log('Gastos obtenidos:', gastos);
           this.gastosFijos.set(gastos);
         });
@@ -137,7 +137,8 @@ export default class GastosFijosComponent implements OnInit {
       name: formData.nombre,
       tipo_gasto: TipoGasto.FIJO,
       usuario: (await this.authService.getCurrentUser())?.uid || 'desconocido',
-      fecha_actualizacion: new Date()
+      fecha_actualizacion: new Date(),
+      fijo: true
     };
 
     try {

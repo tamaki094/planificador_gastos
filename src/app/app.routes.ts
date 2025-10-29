@@ -4,7 +4,12 @@ import { AuthGuardService } from './services/AuthGuard.service';
 export const routes: Routes = [
   {
     path: 'gastos-fijos',
-    loadComponent: () => import('./pages/GastosFijos/GastosFijos.component'),
+    loadComponent: () => import('./pages/gasto-fijos/gastos-fijos.component'),
+    canActivate: [AuthGuardService]
+  },
+  {
+    path: 'gastos-extras',
+    loadComponent: () => import('./pages/gastos-extras/gastos-extras.component'),
     canActivate: [AuthGuardService]
   },
   {

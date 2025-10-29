@@ -57,19 +57,23 @@ export default class DashboardComponent implements OnInit {
     play: 0
   });
 
-   // ✅ Computed para la suma total
-  totalSueldoRestante = computed(() => {
+   totalSueldoRestante = computed(() => {
     const restantes = this.sueldosRestantes();
-    return Object.values(restantes).reduce((total, valor) => total + valor, 0);
+    const total = Object.values(restantes).reduce((sum, valor) => sum + valor, 0);
+    console.log('🧮 Total sueldo restante calculado:', total);
+    return total;
   });
 
-  onSueldoRestanteChange(categoria: string, valor: number) {
+  onSueldoRestanteChange(data: {categoria: string, valor: number}) {
+    console.log(`💼 Sueldo restante ${data.categoria}:`, data.valor);
+
     this.sueldosRestantes.update(restantes => ({
       ...restantes,
-      [categoria]: valor
+      [data.categoria]: data.valor
     }));
-    console.log(`Sueldo restante ${categoria}:`, valor);
-    console.log('Total sueldo restante:', this.totalSueldoRestante());
+
+    console.log('📊 Estado actual sueldos restantes:', this.sueldosRestantes());
+    console.log('🧮 Total actual:', this.totalSueldoRestante());
   }
 
 
@@ -240,22 +244,5 @@ export default class DashboardComponent implements OnInit {
     return this.gastos().reduce((total, gasto) => total + gasto.monto, 0);
   }
 
-
-  calcularMontosSueldos() {
-    // const totalMontos = this.calcularTotalGastos();
-    // const totalSueldos = 38000;
-
-    // this.montoSueldoAhorro.set((this.montoAhorro() / 100) * totalSueldos);
-    // this.montoSueldoGastosVivir.set((this.montoGastosVivir() / 100) * totalSueldos);
-    // this.montoSueldoProvisiones.set((this.montoProvisiones() / 100) * totalSueldos);
-    // this.montoSueldoPlay.set((this.montoPlay() / 100) * totalSueldos);
-
-    // console.log('Total Sueldos:', totalSueldos);
-    // console.log('Monto Ahorro %:', this.montoAhorro());
-    // console.log('Monto Gastos Vivir %:', this.montoGastosVivir());
-    // console.log('Monto Provisiones %:', this.montoProvisiones());
-    // console.log('Monto Play %:', this.montoPlay());
-
-  }
 }
 

@@ -10,30 +10,31 @@ import { CurrencyPipe } from '@angular/common';
 })
 export class MontoSueldoItem implements OnInit {
 
-  @Input() porcentajeMonto!: number | undefined;
-  @Input() sueldo!: Sueldo | null;
-  @Input() sumaGastos!: number | null;
+  @Input() categoria!: string;
+  @Input() porcentajeMonto!: number;
+  @Input() sueldo!: Sueldo;
+  @Input() sumaGastos?: number;
 
-  // ✅ OUTPUT para enviar al padre
-  @Output() sueldoRestanteChange = new EventEmitter<number>();
-
-  montoCalculado = signal<number>(0);
-  sueldoRestante = signal<number>(0);
+  @Output() sueldoRestante = new EventEmitter<{categoria: string, valor: number}>();
 
   ngOnInit() {
-    console.log(`MontoSueldoItem recibido porcentajeMonto: ${this.porcentajeMonto}, sueldo: ${this.sueldo?.sueldo}`);
+    console.log('💼 Detalle del sueldo:', {
+      categoria: this.categoria,
+      porcentaje: this.porcentajeMonto + '%',
+      sueldoTotal: this.sueldo?.sueldo || 'No definido',
+      gastos: this.sumaGastos || 0,
+    });
 
-    const totalSueldos = this.sueldo?.sueldo || 0;
-    this.montoCalculado.set(((this.porcentajeMonto || 0) / 100) * totalSueldos);
+    const valor = this.calcularSueldoRestante();
 
-    const restante = this.montoCalculado() - (this.sumaGastos || 0);
-    this.sueldoRestante.set(restante);
+    this.sueldoRestante.emit({
+      categoria: this.categoria,
+      valor: valor
+    });
 
-    if(this.sumaGastos! > 0) {
-      this.sueldoRestanteChange.emit(restante);
-    }
-    else{
-      this.sueldoRestanteChange.emit(this.montoCalculado());
-    }
+  }
+  calcularSueldoRestante(): number {
+    if (!this.sueldo?.sueldo) return 0;
+    return ((this.sueldo.sueldo * this.porcentajeMonto) / 100) - (this.sumaGastos || 0);
   }
 }

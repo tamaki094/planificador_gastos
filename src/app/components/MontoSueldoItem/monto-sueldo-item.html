@@ -1,7 +1,12 @@
 <div>
-  <span class="font-bold text-lg text-green-700">{{ porcentajeMonto }} %</span>
-  <span class="text-gray-800 font-light uppercase"> da un sueldo de {{ montoCalculado()  | currency:'MXN':'symbol':'1.2-2' }}</span>
+  <span> {{categoria}} </span>
+  <span class="font-bold text-lg text-green-700">{{porcentajeMonto}}%</span>
+  <span class="text-gray-800 font-light uppercase"> da un sueldo de {{ ((sueldo.sueldo) * porcentajeMonto / 100) | currency:'MXN':'symbol':'1.2-2' }}</span>
   @if(sumaGastos! > 0) {
-    <span class="block text-sm text-gray-600"> {{ sueldoRestante() | currency:'MXN':'symbol':'1.2-2' }}</span>
+    <span class="block text-sm text-gray-600">Queda {{ (this.calcularSueldoRestante() || 0) | currency:'MXN':'symbol':'1.2-2' }}</span>
   }
+  @else{
+    <span class="block text-sm text-gray-600">Queda {{ (this.calcularSueldoRestante() || 0) | currency:'MXN':'symbol':'1.2-2' }}</span>
+  }
+
 </div>

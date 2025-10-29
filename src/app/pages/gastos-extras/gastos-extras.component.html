@@ -1,0 +1,42 @@
+<div class="container grid grid-cols-1 md:grid-cols-3 gap-4">
+   <div id="formulario_gasto_fijo"
+       class="bg-blue-300 col-span-1 p-4 border-2 border-black rounded-2xl shadow-gray-500 shadow-lg h-fit min-h-0">
+
+    <form #gastoExtraForm="ngForm" (ngSubmit)="onSubmit(gastoExtraForm)" id="formulario_gasto_extra" method="post">
+      <h1 class="text-black text-3xl font-bold">Formulario de Gasto Extra</h1>
+      <hr class="my-4 border-gray-300">
+
+      <div id="detalles_gasto_fijo" class="mt-4">
+          <div class="mb-4">
+            <label for="nombre" class="block text-black font-bold mb-2">Nombre del Gasto Extra:</label>
+            <input [(ngModel)]="formularioData.nombre" required type="text" id="nombre" name="nombre" class="w-full p-2 border-white border-2 rounded">
+          </div>
+          <div class="mb-4">
+            <label for="monto" class="block text-black font-bold mb-2">Monto:</label>
+            <input [(ngModel)]="formularioData.monto" required type="number" id="monto" name="monto" class="w-full p-2 border-white border-2 rounded">
+            <!-- TODO: Agregar una herramienta para calcular algun gasto  en el que no quieras sacar la calculadora para ver cuanto es en total al mes, ejemplo: Gasto $80 pesos de comida diarios y quiero saber cuanto es al mes, esto le ahorrara al usuario abrir la calculadora -->
+            <!-- TODO: Agregar funciond e vigencia de un gasto, como un pago de tarjeta de crwedito que dura 6 meses y despues ya no se paga. Podria ser  un checkbox que diga "Con Vigencia" y entonces aparecera un calendario para seleccionar la fecha de finalizacion. -->
+            <!-- TODO: Implementar una funcion onkeyup con REGEX para formatear el monto en tiempo real a formato moneda MXN -->
+          </div>
+          <button type="submit"
+            [disabled]="!gastoExtraForm.form.valid"
+            class="h-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center disabled:bg-gray-400">
+         Crear Gasto
+        </button>
+      </div>
+    </form>
+  </div>
+
+   <div id="lista_gastos_fijos" class="bg-amber-100 col-span-2 p-4 border-2 border-black rounded-2xl shadow-gray-500 shadow-lg">
+    <h1 class="text-black text-3xl font-bold mb-4">Lista de Gastos Extras</h1>
+    <hr class="my-4 border-gray-300">
+
+    <!-- Mientras está cargando -->
+    <div class="flex items-center justify-center py-8">
+      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+      <span class="ml-2">Cargando gastos...</span>
+    </div>
+
+  </div>
+
+</div>
