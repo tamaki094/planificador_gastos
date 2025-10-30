@@ -18,7 +18,6 @@ import Swal from 'sweetalert2';
 export default class GastosExtras {
 
     formularioData = {
-    categoria: '',
     nombre: '',
     monto: 0
   };
@@ -29,11 +28,48 @@ export default class GastosExtras {
   gastosFijos = signal<Gasto[]>([]);
 
   async onSubmit(form: NgForm) {
-    const formData = form.value;
-    if (form.valid) {
-      console.log('Formulario de gasto extra enviado con datos:', formData);
-      // Aquí puedes agregar la lógica para manejar el envío del formulario,
-      // como llamar a un servicio para guardar el gasto extra en la base de datos.
+    try {
+      const formData = form.value;
+      if (form.valid) {
+        console.log('Formulario de gasto extra enviado con datos:', formData);
+        await this.crearNuevoGasto(formData);
+        this.limpiarFormulario(form);
+      }
+    }
+    catch (error) {
+      console.error('Error al enviar el formulario de gasto extra:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Hubo un problema al guardar el gasto extra. Por favor, inténtalo de nuevo.'
+      });
+    }
+  }
+
+  private async crearNuevoGasto(formData: any) {
+    const nuevoGasto: Omit<Gasto, 'id'> = {
+      categoria_gasto: 'extra',
+      name: formData.nombre,
+      monto: formData.monto,
+      fecha_creacion: new Date(),
+      usuario: this.authService.getCurrentUser()?.uid || 'desconocido',
+      fecha_actualizacion: new Date(),
+      tipo_gasto: TipoGasto.VARIABLE
+    };
+
+    await this.gastoService.crearGasto(nuevoGasto);
+
+
+  }
+
+  limpiarFormulario(form?: NgForm) {
+    this.formularioData = {
+      nombre: '',
+      monto: 0
+    };
+
+    if (form) {
+      form.resetForm();
     }
   }
 }

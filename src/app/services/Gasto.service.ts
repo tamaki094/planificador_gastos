@@ -112,6 +112,7 @@ export class GastoService {
    * @returns Promesa con el resultado de la operación
    */
   async crearGasto(gasto : Gasto): Promise<any>{
+    console.log('Creando gasto:', gasto);
     const gastosColeccion : CollectionReference<Gasto> = collection(this.firestore, 'gastos') as CollectionReference<Gasto>;
     const gastoData = {
       ...gasto,

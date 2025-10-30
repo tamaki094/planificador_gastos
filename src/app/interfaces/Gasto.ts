@@ -7,5 +7,4 @@ export interface Gasto {
   tipo_gasto: number;       // Tipo de gasto (1: fijo, 2: variable)
   usuario: string;
   fecha_actualizacion: Date; // Fecha de actualización del gasto
-  fijo: boolean;                  // Indica si el gasto es fijo o no
 }

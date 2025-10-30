@@ -138,7 +138,6 @@ export default class GastosFijosComponent implements OnInit {
       tipo_gasto: TipoGasto.FIJO,
       usuario: (await this.authService.getCurrentUser())?.uid || 'desconocido',
       fecha_actualizacion: new Date(),
-      fijo: true
     };
 
     try {
