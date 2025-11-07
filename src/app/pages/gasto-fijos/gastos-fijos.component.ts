@@ -38,7 +38,7 @@ export default class GastosFijosComponent implements OnInit {
       if(user){
         console.log('🔍 Auth state changed in GastosFijosComponent:', user);
 
-        this.gastoService.getAllGastos(true).subscribe((gastos : Gasto[])=> {
+        this.gastoService.getAllGastos(1).subscribe((gastos : Gasto[])=> {
           console.log('Gastos obtenidos:', gastos);
           this.gastosFijos.set(gastos);
         });
@@ -58,17 +58,14 @@ export default class GastosFijosComponent implements OnInit {
     const isChecked = ($event.target as HTMLInputElement).checked;
 
     if (isChecked) {
-      // ✅ Checkbox marcado = AGREGAR gasto
       this.gastosSeleccionadosArr.update(gastos => [...gastos, gasto]);
       this.trashHide.set(false);
     }
     else {
-      // ✅ Checkbox desmarcado = QUITAR gasto
       this.gastosSeleccionadosArr.update(gastos =>
         gastos.filter(g => g.id !== gasto.id)
       );
 
-      // Si ya no hay seleccionados, ocultar botón
       if (this.gastosSeleccionadosArr().length === 0) {
         this.trashHide.set(true);
       }

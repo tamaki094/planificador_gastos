@@ -30,13 +30,46 @@
    <div id="lista_gastos_fijos" class="bg-amber-100 col-span-2 p-4 border-2 border-black rounded-2xl shadow-gray-500 shadow-lg">
     <h1 class="text-black text-3xl font-bold mb-4">Lista de Gastos Extras</h1>
     <hr class="my-4 border-gray-300">
+  @defer (on viewport) {
+    <!-- Solo carga cuando el div es visible -->
+    @for (gasto of gastosExtras(); track gasto.id) {
+      <input type="checkbox" id="gasto_{{ gasto.id }}" class="hidden peer gasto_item" (change)="onGastoSelect(gasto, $event)" />
 
+      <label for="gasto_{{ gasto.id }}" class="group bg-white p-3 rounded-lg shadow-sm mb-2 flex justify-between items-center hover:shadow-md transition-all duration-200">
+        <div>
+          <span class="font-medium">{{ gasto.name }}</span>
+          <small class="text-gray-500 block">{{ gasto.categoria_gasto }}</small>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="font-bold text-green-600">{{ gasto.monto | currency:'MXN' }}</span>
+          <!-- Oculto por defecto, visible en hover del grupo -->
+          <button
+            class="btnEdit md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-200 text-yellow-500 hover:bg-yellow-500 hover:text-white p-2 rounded-lg"
+            (click)="editarGastoSeleccionado(gasto)">
+            <img src="edit.svg" class="h-5 w-5" />
+          </button>
+        </div>
+      </label>
+    }
+  }
+  @placeholder {
+    <!-- Mientras no se carga -->
+    <div class="animate-pulse">
+      <div class="h-4 bg-gray-300 rounded mb-2"></div>
+      <div class="h-4 bg-gray-300 rounded mb-2"></div>
+      <div class="h-4 bg-gray-300 rounded"></div>
+    </div>
+  } @loading {
     <!-- Mientras está cargando -->
     <div class="flex items-center justify-center py-8">
       <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
       <span class="ml-2">Cargando gastos...</span>
     </div>
-
+  } @error {
+    <!-- Si hay error -->
+    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+      <p>❌ Error al cargar los gastos</p>
+    </div>
+  }
   </div>
-
 </div>

@@ -52,9 +52,9 @@ export class GastoService {
    * Obtiene todos los gastos desde Firestore
    * @returns Observable con la lista de gastos
    */
-  getAllGastos(fijo : boolean): Observable<Gasto[]> {
+  getAllGastos(tipo : number): Observable<Gasto[]> {
     const gastosColeccion: CollectionReference<Gasto> = collection(this.firestore, 'gastos') as CollectionReference<Gasto>;
-    const gastosQuery: Query<Gasto> = query(gastosColeccion, where('fijo', '==', fijo)) as Query<Gasto>;
+    const gastosQuery: Query<Gasto> = query(gastosColeccion, where('tipo_gasto', '==', tipo)) as Query<Gasto>;
 
     return collectionData(gastosQuery,{ idField: 'id'})
       .pipe(
