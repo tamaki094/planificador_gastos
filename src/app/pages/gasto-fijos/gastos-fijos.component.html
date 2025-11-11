@@ -68,10 +68,17 @@
           </div>
           <div class="mb-4">
             <label for="monto" class="block text-black font-bold mb-2">Monto:</label>
-            <input [(ngModel)]="formularioData.monto" required type="number" id="monto" name="monto" class="w-full p-2 border-white border-2 rounded">
+            <input (dblclick)="abrirModal()" [(ngModel)]="formularioData.monto" required type="number" id="monto" name="monto" class="w-full p-2 border-white border-2 rounded">
             <!-- TODO: Agregar una herramienta para calcular algun gasto  en el que no quieras sacar la calculadora para ver cuanto es en total al mes, ejemplo: Gasto $80 pesos de comida diarios y quiero saber cuanto es al mes, esto le ahorrara al usuario abrir la calculadora -->
-            <!-- TODO: Agregar funciond e vigencia de un gasto, como un pago de tarjeta de crwedito que dura 6 meses y despues ya no se paga. Podria ser  un checkbox que diga "Con Vigencia" y entonces aparecera un calendario para seleccionar la fecha de finalizacion. -->
             <!-- TODO: Implementar una funcion onkeyup con REGEX para formatear el monto en tiempo real a formato moneda MXN -->
+          </div>
+          <div class="mb-4">
+            <label for="fecha_vencimiento" class="block text-black font-bold mb-2">Fecha de Vencimiento (opcional):</label>
+            <input type="radio" id="sin_vencimiento" name="vencimiento_option" value="sin_vencimiento" class="mr-2"
+              (change)="formularioData.fecha_vencimiento = null" [checked]="!formularioData.fecha_vencimiento"> Sin Vencimiento
+            <input type="radio" id="con_vencimiento" name="vencimiento_option" value="con_vencimiento" class="mr-2"
+              (change)="formularioData.fecha_vencimiento = formularioData.fecha_vencimiento || todayString()" [checked]="formularioData.fecha_vencimiento"> Con Vencimiento
+            <input [(ngModel)]="formularioData.fecha_vencimiento" type="date" id="fecha_vencimiento" name="fecha_vencimiento" class="w-full p-2 border-white border-2 rounded">
           </div>
           <button type="submit"
             [disabled]="!gastoFijoForm.form.valid"
@@ -142,3 +149,88 @@
   }
   </div>
 </div>
+
+@if(modalVisible())
+{
+  <div
+     class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50"
+     (click)="cerrarModal()">
+
+  <!-- ✅ Contenido del modal -->
+  <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white"
+       (click)="$event.stopPropagation()">
+
+    <!-- ✅ Header del modal -->
+    <div class="flex items-center justify-between pb-3">
+      <h3 class="text-lg font-bold text-gray-900">Calcular Gastos</h3>
+      <button (click)="cerrarModal()"
+              class="text-gray-400 hover:text-gray-600">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- ✅ Cuerpo del modal -->
+   <div class="py-2">
+  <div class="mb-4">
+    <input #calculadoraInput
+           type="text"
+           placeholder="Ej: 80 * 30 (para gastos diarios)"
+           class="w-full p-3 border-2 rounded-md transition-colors"
+           [class.border-red-500]="!entradaValida()"
+           [class.border-green-500]="entradaValida() && calculadoraInput.value"
+           [class.border-gray-300]="entradaValida() || !calculadoraInput.value"
+           (input)="validarCaracteres(calculadoraInput.value)"
+           (keydown.enter)="calcularGasto(calculadoraInput.value); calculadoraInput.value=''; $event.preventDefault();" />
+
+    <!-- ✅ Mensaje de error -->
+    @if (mensajeError()) {
+      <p class="text-red-500 text-sm mt-1">{{ mensajeError() }}</p>
+    }
+  </div>
+
+  <!-- ✅ Ejemplos de uso -->
+  <div class="mb-4">
+    <p class="text-xs text-gray-600 mb-2">💡 Ejemplos:</p>
+    <div class="grid grid-cols-1 gap-1">
+      <button (click)="calculadoraInput.value='80*30'; validarCaracteres('80*30')"
+              class="text-left text-xs bg-gray-100 p-1 rounded hover:bg-gray-200">
+        80 * 30 (gasto diario × días del mes)
+      </button>
+      <button (click)="calculadoraInput.value='(1500+800)/2'; validarCaracteres('(1500+800)/2')"
+              class="text-left text-xs bg-gray-100 p-1 rounded hover:bg-gray-200">
+        (1500 + 800) / 2 (promedio de gastos)
+      </button>
+      <button (click)="calculadoraInput.value='250*4'; validarCaracteres('250*4')"
+              class="text-left text-xs bg-gray-100 p-1 rounded hover:bg-gray-200">
+        250 * 4 (gasto semanal × semanas)
+      </button>
+    </div>
+  </div>
+
+  <!-- ✅ Resultado mejorado -->
+  <div class="bg-green-50 p-3 rounded-md">
+    <div class="flex justify-between items-center">
+      <span class="text-sm text-green-700">Resultado:</span>
+      <span class="font-bold text-lg text-green-800">
+        {{ calculoResultado() | currency:'MXN':'symbol':'1.2-2' }}
+      </span>
+    </div>
+  </div>
+</div>
+
+    <!-- ✅ Footer del modal -->
+    <div class="flex items-center justify-end pt-3 space-x-2">
+      <button (click)="cerrarModal()"
+              class="px-4 py-2 bg-gray-500 text-white text-base font-medium rounded-md hover:bg-gray-600">
+        Cancelar
+      </button>
+      <button (click)="confirmarAccion()"
+              class="px-4 py-2 bg-blue-500 text-white text-base font-medium rounded-md hover:bg-blue-600">
+        Confirmar
+      </button>
+    </div>
+  </div>
+</div>
+}

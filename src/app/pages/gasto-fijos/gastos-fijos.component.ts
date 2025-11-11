@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, OnInit, Signal, signal } from '@angular/core';
 import { AuthService } from '../../services/Auth.service';
 import { Observable } from 'rxjs';
 import { User } from 'firebase/auth';
@@ -17,6 +17,9 @@ import Swal from 'sweetalert2';
 })
 export default class GastosFijosComponent implements OnInit {
 
+
+
+
   authService = inject(AuthService);
   user : Observable<User | null> = this.authService.currentUser$;
   categoriasService = inject(CategoriaService);
@@ -25,11 +28,17 @@ export default class GastosFijosComponent implements OnInit {
   trashHide = signal<boolean>(true);
   gastosSeleccionadosArr = signal<Gasto[]>([]);
   gastoEnEdicion = signal<Gasto | null>(null);
+  modalVisible = signal(false);
+  calculoResultado = signal<number>(0);
+  entradaValida = signal<boolean>(true);
+  mensajeError = signal<string>('');
+
 
   formularioData = {
     categoria: '',
     nombre: '',
-    monto: 0
+    monto: 0,
+    fecha_vencimiento: null as Date | null
   };
 
 
@@ -156,7 +165,8 @@ export default class GastosFijosComponent implements OnInit {
     this.formularioData = {
       categoria: '',
       nombre: '',
-      monto: 0
+      monto: 0,
+      fecha_vencimiento: null
     };
     this.gastoEnEdicion.set(null);
   }
@@ -220,9 +230,137 @@ export default class GastosFijosComponent implements OnInit {
     this.formularioData = {
       categoria: gasto.categoria_gasto,
       nombre: gasto.name,
-      monto: gasto.monto
+      monto: gasto.monto,
+      fecha_vencimiento: gasto.fecha_vencimiento || null
     };
 
     this.gastoEnEdicion.set(gasto);
+  }
+
+  todayString(): Date|null {
+    return new Date();
+  }
+
+
+
+  abrirModal() {
+    this.modalVisible.set(true);
+  }
+
+  cerrarModal() {
+    this.modalVisible.set(false);
+  }
+
+  confirmarAccion() {
+    console.log('Acción confirmada');
+    this.cerrarModal();
+  }
+
+  calcularGasto(expresion: string) {
+    if (!this.entradaValida()) {
+      console.warn('Expresión no válida:', expresion);
+      return;
+    }
+
+    try {
+      // ✅ Limpiar y preparar la expresión
+      const expresionLimpia = this.prepararExpresion(expresion);
+
+      // ✅ Evaluar de forma segura
+      const resultado = this.evaluarExpresionSegura(expresionLimpia);
+
+      if (resultado !== null) {
+        // ✅ Redondear a 2 decimales
+        const resultadoRedondeado = Math.round(resultado * 100) / 100;
+
+        this.calculoResultado.set(resultadoRedondeado);
+
+        // ✅ Actualizar el formulario automáticamente
+        this.formularioData.monto = resultadoRedondeado;
+
+        console.log('✅ Cálculo exitoso:', `${expresion} = ${resultadoRedondeado}`);
+
+        // ✅ Mensaje de éxito opcional
+        this.mensajeError.set(`✅ Resultado: ${resultadoRedondeado}`);
+
+      } else {
+        throw new Error('Resultado inválido');
+      }
+
+    }
+    catch (error) {
+      console.error('❌ Error al calcular:', error);
+
+      this.calculoResultado.set(0);
+      this.mensajeError.set('❌ Error en la expresión matemática');
+
+      // ✅ Opcional: limpiar después de 3 segundos
+      setTimeout(() => {
+        if (this.mensajeError().includes('Error')) {
+          this.mensajeError.set('');
+        }
+      }, 3000);
+    }
+  }
+
+  // ✅ Función para limpiar y preparar la expresión
+  private prepararExpresion(expresion: string): string {
+    return expresion
+      .replace(/\s+/g, '') // Quitar espacios
+      .replace(/,/g, '.')  // Convertir comas a puntos
+      .toLowerCase();      // Normalizar texto
+  }
+
+  // ✅ Evaluación segura de la expresión
+  private evaluarExpresionSegura(expresion: string): number | null {
+    try {
+      // ✅ Validación final estricta
+      if (!/^[0-9+\-*/().]+$/.test(expresion)) {
+        throw new Error('Caracteres no permitidos después de limpiar');
+      }
+
+      // ✅ Validar que no esté vacía
+      if (!expresion || expresion.length === 0) {
+        throw new Error('Expresión vacía');
+      }
+
+      // ✅ Usar Function constructor de forma controlada
+      const resultado = new Function('"use strict"; return (' + expresion + ')')();
+
+      // ✅ Validar que el resultado sea un número válido
+      if (typeof resultado !== 'number' || isNaN(resultado) || !isFinite(resultado)) {
+        throw new Error('Resultado no es un número válido');
+      }
+
+      return resultado;
+
+    }
+    catch (error) {
+      console.error('Error en evaluación segura:', error);
+      return null;
+    }
+  }
+
+  validarCaracteres(entrada: string): boolean {
+    // Expresión regular que permite:
+    // - Números (0-9)
+    // - Operadores básicos (+, -, *, /)
+    // - Punto decimal (.)
+    // - Espacios en blanco
+    // - Paréntesis para agrupación
+    const regex = /^[0-9+\-*/().\s]*$/;
+
+    const esValido = regex.test(entrada);
+
+    // Actualizar estado
+    this.entradaValida.set(esValido);
+
+    if (!esValido) {
+      this.mensajeError.set('⚠️ Solo se permiten números y operadores matemáticos');
+    } else {
+      this.mensajeError.set('');
+    }
+
+    return esValido;
   }
 }

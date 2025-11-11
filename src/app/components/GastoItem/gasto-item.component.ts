@@ -31,6 +31,8 @@ export class GastoItemComponent {
         return 'casa.svg';
       case 'servicios':
         return 'servicios.svg';
+      case 'extra':
+        return 'otros.svg';
       default:
         return 'default.svg';
     }

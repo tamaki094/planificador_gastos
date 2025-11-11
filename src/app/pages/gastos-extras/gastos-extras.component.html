@@ -30,6 +30,20 @@
    <div id="lista_gastos_fijos" class="bg-amber-100 col-span-2 p-4 border-2 border-black rounded-2xl shadow-gray-500 shadow-lg">
     <h1 class="text-black text-3xl font-bold mb-4">Lista de Gastos Extras</h1>
     <hr class="my-4 border-gray-300">
+     <div id="gastos_seleccionados"
+     class="flex items-center justify-between bg-slate-50 border-l-4 border-l-red-500 rounded-r-lg p-3 mx-2 mb-4"
+     [hidden]="trashHide()">
+
+    <div class="flex items-center gap-3">
+      <div class="bg-red-500 text-white text-sm font-bold px-3 py-1 rounded-full">
+        {{ gastosSeleccionadosArr().length }}
+      </div>
+      <span class="text-gray-700 font-medium">gastos seleccionados</span>
+    </div>
+    <button class="text-red-500 hover:bg-red-500 hover:text-white p-2 rounded-lg transition-all duration-200 group" (click)="eliminarGastosSeleccionados()">
+      <img src="trash.svg" class="h-5 w-5 group-hover:scale-110 transition-transform" />
+    </button>
+  </div>
   @defer (on viewport) {
     <!-- Solo carga cuando el div es visible -->
     @for (gasto of gastosExtras(); track gasto.id) {
