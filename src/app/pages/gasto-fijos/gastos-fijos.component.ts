@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit, Signal, signal } from '@angular/core';
 import { AuthService } from '../../services/Auth.service';
 import { Observable } from 'rxjs';
-import { User } from 'firebase/auth';
+import { User, getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { CategoriaService } from '../../services/Categoria.service';
 import { CommonModule } from '@angular/common';
 import { NgForm, FormsModule} from '@angular/forms'
@@ -16,10 +16,6 @@ import Swal from 'sweetalert2';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class GastosFijosComponent implements OnInit {
-
-
-
-
   authService = inject(AuthService);
   user : Observable<User | null> = this.authService.currentUser$;
   categoriasService = inject(CategoriaService);
@@ -42,7 +38,7 @@ export default class GastosFijosComponent implements OnInit {
   };
 
 
-  ngOnInit() : void{
+  ngOnInit() : void {
     this.user.subscribe(user => {
       if(user){
         console.log('🔍 Auth state changed in GastosFijosComponent:', user);
@@ -61,6 +57,7 @@ export default class GastosFijosComponent implements OnInit {
         console.log('Categorías obtenidas:', categorias);
       });
     });
+
   }
 
   onGastoSelect(gasto: Gasto, $event: Event) {
@@ -144,6 +141,7 @@ export default class GastosFijosComponent implements OnInit {
       tipo_gasto: TipoGasto.FIJO,
       usuario: (await this.authService.getCurrentUser())?.uid || 'desconocido',
       fecha_actualizacion: new Date(),
+      fecha_vencimiento: formData.fecha_vencimiento ? new Date(formData.fecha_vencimiento) : undefined
     };
 
     try {
@@ -253,6 +251,7 @@ export default class GastosFijosComponent implements OnInit {
 
   confirmarAccion() {
     console.log('Acción confirmada');
+    this.formularioData.monto = this.calculoResultado();
     this.cerrarModal();
   }
 

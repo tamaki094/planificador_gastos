@@ -15,8 +15,11 @@ export default class LoginComponent {
 
   async onGoogleLogin() {
     try {
-      await this.authService.loginWithGoogle();
-      this.router.navigate(['/dashboard']);
+      const result = await this.authService.loginWithGoogle();
+      if(result && result.user){
+        this.router.navigate(['/dashboard']);
+      }
+
     }
     catch (error) {
       console.error('Error during Google login:', error);

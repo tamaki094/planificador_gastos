@@ -28,6 +28,11 @@ export const routes: Routes = [
     canActivate: [AuthGuardService]
   },
   {
+    path: 'notificaciones',
+    loadComponent: () => import('./pages/Notificaciones/Notificaciones.component'),
+    canActivate: [AuthGuardService]
+  },
+  {
     path: 'login',
     loadComponent: () => import('./pages/Login/Login.component')
   },

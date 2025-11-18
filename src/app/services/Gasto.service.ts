@@ -112,13 +112,15 @@ export class GastoService {
    * @returns Promesa con el resultado de la operación
    */
   async crearGasto(gasto : Gasto): Promise<any>{
+    debugger;
     console.log('Creando gasto:', gasto);
     const gastosColeccion : CollectionReference<Gasto> = collection(this.firestore, 'gastos') as CollectionReference<Gasto>;
     const gastoData = {
       ...gasto,
-      fecha_creacion: gasto.fecha_creacion ? Timestamp.fromDate(gasto.fecha_creacion) : Timestamp.now()
+      fecha_creacion: gasto.fecha_creacion ? Timestamp.fromDate(gasto.fecha_creacion) : Timestamp.now(),
+      fecha_vencimiento: gasto.fecha_vencimiento ? Timestamp.fromDate(gasto.fecha_vencimiento) : null
     };
-    return await addDoc(gastosColeccion, gastoData);
+    return await addDoc(gastosColeccion, gastoData as DocumentData);
   }
 
   /**
@@ -131,7 +133,8 @@ export class GastoService {
     const gastoDocRef : DocumentReference<Gasto> = doc(this.firestore, `gastos/${id}`) as DocumentReference<Gasto>;
     const gastoData = {
       ...gasto,
-      ...(gasto.fecha_creacion && { fecha_creacion: Timestamp.fromDate(gasto.fecha_creacion) })
+      ...(gasto.fecha_creacion && { fecha_creacion: Timestamp.fromDate(gasto.fecha_creacion) }),
+      ...(gasto.fecha_vencimiento && { fecha_vencimiento: Timestamp.fromDate(gasto.fecha_vencimiento) })
     };
 
     return updateDoc(gastoDocRef, gastoData as DocumentData);

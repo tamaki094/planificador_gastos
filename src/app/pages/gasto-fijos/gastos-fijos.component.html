@@ -69,8 +69,8 @@
           <div class="mb-4">
             <label for="monto" class="block text-black font-bold mb-2">Monto:</label>
             <input (dblclick)="abrirModal()" [(ngModel)]="formularioData.monto" required type="number" id="monto" name="monto" class="w-full p-2 border-white border-2 rounded">
-            <!-- TODO: Agregar una herramienta para calcular algun gasto  en el que no quieras sacar la calculadora para ver cuanto es en total al mes, ejemplo: Gasto $80 pesos de comida diarios y quiero saber cuanto es al mes, esto le ahorrara al usuario abrir la calculadora -->
             <!-- TODO: Implementar una funcion onkeyup con REGEX para formatear el monto en tiempo real a formato moneda MXN -->
+            <!-- TODO: Crear notificaciones en google calendar desde https://console.cloud.google.com/ -->
           </div>
           <div class="mb-4">
             <label for="fecha_vencimiento" class="block text-black font-bold mb-2">Fecha de Vencimiento (opcional):</label>
