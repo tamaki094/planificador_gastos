@@ -224,3 +224,22 @@ input[type="radio"]:checked + .btnCategoria:hover {
 .seccion-dashboard {
   @apply container mx-auto p-6 rounded-2xl shadow-lg transition-all duration-500 ease-in-out overflow-hidden m-4;
 }
+
+
+@keyframes swing {
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(15deg); }
+  50% { transform: rotate(0deg); }
+  75% { transform: rotate(-15deg); }
+  100% { transform: rotate(0deg); }
+}
+
+.animate-swing {
+  animation: swing 0.6s ease-in-out;
+  transform-origin: top center; /* ✅ Punto de rotación en la parte superior */
+}
+
+/* ✅ Para que funcione el hover */
+.hover\:animate-swing:hover {
+  animation: swing 0.6s ease-in-out;
+}

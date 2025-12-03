@@ -1,53 +1,34 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { ChangeDetectionStrategy, Component, inject, Input, OnInit, signal } from '@angular/core';
+import { getAuth, GoogleAuthProvider, signInWithPopup, User } from 'firebase/auth';
+import { Gasto } from '../../interfaces';
+import { GastoService } from '../../services/Gasto.service';
+import { Auth } from '@angular/fire/auth';
+import { AuthService } from '../../services/Auth.service';
+import { NotificacionComponent } from "../../components/Notificacion/Notificacion.component";
 
 @Component({
   selector: 'app-notificaciones.component',
-  imports: [],
+  imports: [NotificacionComponent],
   templateUrl: './Notificaciones.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export default class NotificacionesComponent {
+export default class NotificacionesComponent implements OnInit {
 
-  pruebaGoogleCalendar() {
-    const auth = getAuth();
-    const provider = new GoogleAuthProvider();
-    provider.addScope('https://www.googleapis.com/auth/calendar.events');
+  gastos = signal<Gasto[]>([]);
+  user : User | null = null;
 
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const accessToken = credential?.accessToken;
+  gastoService = inject(GastoService);
+  authService = inject(AuthService);
 
-        if (!accessToken) {
-          console.error('No se obtuvo el access token. Revisa los scopes.');
-          return;
-        }
-
-        console.log('Access Token:', accessToken);
-
-        return fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events', {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${accessToken}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            summary: 'Reunión importante',
-            start: { dateTime: '2025-11-13T10:00:00-06:00', timeZone: 'America/Mexico_City' },
-            end: { dateTime: '2025-11-13T11:00:00-06:00', timeZone: 'America/Mexico_City' },
-            reminders: {
-              useDefault: false,
-              overrides: [
-                { method: 'email', minutes: 30 },
-                { method: 'popup', minutes: 10 }
-              ]
-            }
-          })
-        });
-      })
-      .then(response => response?.json())
-      .then(data => console.log('Evento creado:', data))
-      .catch(error => console.error('Error en login o creación de evento:', error));
+  async ngOnInit() {
+    this.user = await this.authService.getCurrentUser();
+    await this.gastoService.getAllGastosByUser(this.user?.uid || '').subscribe(
+      (gastos) => {
+        this.gastos.set(gastos);
+      }
+    );
   }
+
+
+
 }

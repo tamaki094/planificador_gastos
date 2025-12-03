@@ -17,9 +17,6 @@ import { SueldoService } from '../../services/Sueldo.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export default class DashboardComponent implements OnInit {
-
-
-
   montoAhorro = signal<number>(0);
   montoGastosVivir = signal<number>(0);
   montoProvisiones = signal<number>(0);

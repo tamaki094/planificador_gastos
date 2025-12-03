@@ -12,8 +12,6 @@ export class AuthService {
   public currentUser$: Observable<User | null> = this.currentUserSubject.asObservable();
   public accesToken : string  | undefined;
 
-
-
   constructor(private auth: Auth) {
     // Escucha cambios en el estado de autenticación
     onAuthStateChanged(this.auth, (user) => {

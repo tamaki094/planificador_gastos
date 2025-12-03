@@ -42,7 +42,8 @@ export class GastoService {
       .pipe(
         map((gastos: any[]) => gastos.map(gasto => ({
           ...gasto,
-          fecha_creacion: gasto.fecha_creacion?.toDate() || new Date()
+          fecha_creacion: gasto.fecha_creacion?.toDate() || new Date(),
+          fecha_recordatorio: gasto.fecha_recordatorio?.toDate() || new Date()
         })))
       ) as Observable<Gasto[]>;
   }

@@ -8,4 +8,5 @@ export interface Gasto {
   usuario: string;
   fecha_actualizacion: Date; // Fecha de actualización del gasto
   fecha_vencimiento?: Date;    // Fecha de vencimiento (opcional)
+  fecha_recordatorio?: Date;   // Fecha de recordatorio (opcional)
 }

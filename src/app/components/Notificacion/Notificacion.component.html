@@ -1,1 +1,60 @@
-<p>Notificacion.component works!</p>
+<div class="relative bg-white p-6 rounded-2xl shadow-xl border-l-4 border-yellow-400 hover:shadow-2xl transition-all duration-300">
+
+  <div class="absolute top-4 right-4 flex items-center gap-2">
+    <button (click)="crearNotificacion()"
+            class="group p-2 hover:bg-gray-100 rounded-full transition-all duration-200">
+      <img src="notification.svg"
+           alt="Icono de notificación"
+           class="w-5 h-5 group-hover:animate-swing transform-gpu origin-top" />
+    </button>
+  </div>
+
+
+  <div class="pr-16 mb-6">
+    <h1 class="text-2xl font-bold text-gray-900 mb-2">{{gasto.name}}</h1>
+    <div class="flex items-center gap-3">
+      <span class="px-3 py-1 rounded-full text-sm font-medium"
+            [class.bg-blue-50]="gasto.tipo_gasto === 1"
+            [class.text-blue-700]="gasto.tipo_gasto === 1"
+            [class.bg-emerald-50]="gasto.tipo_gasto !== 1"
+            [class.text-emerald-700]="gasto.tipo_gasto !== 1">
+        {{gasto.tipo_gasto === 1 ? 'Gasto Fijo' : 'Gasto Variable'}}
+      </span>
+      <div class="text-2xl font-bold text-yellow-600">
+        {{gasto.monto | currency:'MXN':'symbol':'1.0-0'}}
+      </div>
+    </div>
+  </div>
+
+  <div class="space-y-3 text-sm text-gray-600">
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+        <span class="text-blue-600 text-xs">📅</span>
+      </div>
+      <div>
+        <div class="font-medium text-gray-900">Fecha de creación</div>
+        <div>{{gasto.fecha_creacion | date:'fullDate'}}</div>
+      </div>
+    </div>
+
+    @if(gasto.fecha_recordatorio) {
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
+          <span class="text-purple-600 text-xs">🔔</span>
+        </div>
+        <div>
+          <div class="font-medium text-gray-900">Recordatorio</div>
+          <div>{{gasto.fecha_recordatorio | date:'fullDate'}}</div>
+        </div>
+      </div>
+    }
+  </div>
+
+  <div class="absolute  bottom-0 right-0 z-1 opacity-70">
+    <div class="relative">
+      <img [src]="getImage()"
+          alt="Imagen del gasto"
+          class="w-14 h-14  object-cover border-3 border-white shadow-lg"/>
+    </div>
+  </div>
+</div>
