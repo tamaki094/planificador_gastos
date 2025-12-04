@@ -1,233 +1,439 @@
 <div class="container grid grid-cols-1 md:grid-cols-3 gap-4">
-   <div id="formulario_gasto_fijo"
-       class="bg-blue-300 col-span-1 p-4 border-2 border-black rounded-2xl shadow-gray-500 shadow-lg h-fit min-h-0">
+  <div
+    id="formulario_gasto_fijo"
+    class="bg-blue-100 col-span-1 p-6 border border-gray-300 rounded-2xl shadow-lg max-w-xl h-fit"
+  >
+    <form
+      #gastoFijoForm="ngForm"
+      (ngSubmit)="onSubmit(gastoFijoForm)"
+      id="formulario_gasto_fijo"
+      method="post"
+    >
+      <h1 class="text-gray-800 text-3xl font-bold mb-2">Formulario de Gasto Fijo</h1>
+      <p class="text-gray-500 mb-4">Registra tus gastos recurrentes fácilmente</p>
+      <hr class="my-4 border-gray-300" />
 
-    <form #gastoFijoForm="ngForm" (ngSubmit)="onSubmit(gastoFijoForm)" id="formulario_gasto_fijo" method="post">
-      <h1 class="text-black text-3xl font-bold">Formulario de Gasto Fijo</h1>
-      <hr class="my-4 border-gray-300">
+      <!-- Categorías -->
       <div id="categoria_gasto_fijo" class="grid grid-cols-2 md:grid-cols-3 gap-4 mt-4">
-        <input  [(ngModel)]="formularioData.categoria" required type="radio" id="radio_vivienda" name="categoria" value="vivienda" class="hidden">
+        <input
+          [(ngModel)]="formularioData.categoria"
+          required
+          type="radio"
+          id="radio_vivienda"
+          name="categoria"
+          value="vivienda"
+          class="hidden"
+        />
         <label for="radio_vivienda" class="btnCategoria cursor-pointer">
           <img src="casa.svg" />
           <span>Vivienda</span>
         </label>
 
-        <input  [(ngModel)]="formularioData.categoria" required type="radio" id="radio_transporte" name="categoria" value="transporte" class="hidden">
+        <input
+          [(ngModel)]="formularioData.categoria"
+          required
+          type="radio"
+          id="radio_transporte"
+          name="categoria"
+          value="transporte"
+          class="hidden"
+        />
         <label for="radio_transporte" class="btnCategoria cursor-pointer">
           <img src="bus.svg" />
           <span>Transporte</span>
         </label>
 
-        <input  [(ngModel)]="formularioData.categoria" required type="radio" id="radio_servicios" name="categoria" value="servicios" class="hidden">
+        <input
+          [(ngModel)]="formularioData.categoria"
+          required
+          type="radio"
+          id="radio_servicios"
+          name="categoria"
+          value="servicios"
+          class="hidden"
+        />
         <label for="radio_servicios" class="btnCategoria cursor-pointer">
           <img src="servicios.svg" />
           <span>Servicios Básicos</span>
         </label>
 
-        <input  [(ngModel)]="formularioData.categoria" required type="radio" id="radio_alimentacion" name="categoria" value="alimentacion" class="hidden">
+        <input
+          [(ngModel)]="formularioData.categoria"
+          required
+          type="radio"
+          id="radio_alimentacion"
+          name="categoria"
+          value="alimentacion"
+          class="hidden"
+        />
         <label for="radio_alimentacion" class="btnCategoria cursor-pointer">
           <img src="comida.svg" />
           <span>Alimentación</span>
         </label>
 
-        <input  [(ngModel)]="formularioData.categoria" required type="radio" id="radio_salud" name="categoria" value="salud" class="hidden">
+        <input
+          [(ngModel)]="formularioData.categoria"
+          required
+          type="radio"
+          id="radio_salud"
+          name="categoria"
+          value="salud"
+          class="hidden"
+        />
         <label for="radio_salud" class="btnCategoria cursor-pointer">
           <img src="salud.svg" />
           <span>Salud</span>
         </label>
 
-        <input  [(ngModel)]="formularioData.categoria" required type="radio" id="radio_educacion" name="categoria" value="educacion" class="hidden">
+        <input
+          [(ngModel)]="formularioData.categoria"
+          required
+          type="radio"
+          id="radio_educacion"
+          name="categoria"
+          value="educacion"
+          class="hidden"
+        />
         <label for="radio_educacion" class="btnCategoria cursor-pointer">
           <img src="educacion.svg" />
           <span>Educación</span>
         </label>
 
-        <input  [(ngModel)]="formularioData.categoria" required type="radio" id="radio_entretenimiento" name="categoria" value="entretenimiento" class="hidden">
+        <input
+          [(ngModel)]="formularioData.categoria"
+          required
+          type="radio"
+          id="radio_entretenimiento"
+          name="categoria"
+          value="entretenimiento"
+          class="hidden"
+        />
         <label for="radio_entretenimiento" class="btnCategoria cursor-pointer">
           <img src="entretenimiento.svg" />
           <span>Entretenimiento</span>
         </label>
 
-        <input  [(ngModel)]="formularioData.categoria" required type="radio" id="radio_mascotas" name="categoria" value="mascotas" class="hidden">
+        <input
+          [(ngModel)]="formularioData.categoria"
+          required
+          type="radio"
+          id="radio_mascotas"
+          name="categoria"
+          value="mascotas"
+          class="hidden"
+        />
         <label for="radio_mascotas" class="btnCategoria cursor-pointer">
           <img src="mascotas.svg" />
           <span>Mascotas</span>
         </label>
 
-        <input  [(ngModel)]="formularioData.categoria" required type="radio" id="radio_otros" name="categoria" value="otros" class="hidden">
+        <input
+          [(ngModel)]="formularioData.categoria"
+          required
+          type="radio"
+          id="radio_otros"
+          name="categoria"
+          value="otros"
+          class="hidden"
+        />
         <label for="radio_otros" class="btnCategoria cursor-pointer">
           <img src="otros.svg" />
           <span>Otros</span>
         </label>
       </div>
-      <hr class="my-4 border-gray-300">
-      <div id="detalles_gasto_fijo" class="mt-4">
-          <div class="mb-4">
-            <label for="nombre" class="block text-black font-bold mb-2">Nombre del Gasto Fijo:</label>
-            <input [(ngModel)]="formularioData.nombre" required type="text" id="nombre" name="nombre" class="w-full p-2 border-white border-2 rounded">
+
+      <hr class="my-4 border-gray-300" />
+
+      <!-- Detalles -->
+      <div id="detalles_gasto_fijo" class="mt-4 space-y-4">
+        <div>
+          <label for="nombre" class="block text-gray-700 font-semibold mb-1"
+            >Nombre del Gasto Fijo:</label
+          >
+          <input
+            [(ngModel)]="formularioData.nombre"
+            required
+            type="text"
+            id="nombre"
+            name="nombre"
+            class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+        <div>
+          <label for="monto" class="block text-gray-700 font-semibold mb-1">
+            Monto:
+            <span class="relative group inline-block ml-1">
+              <span class="text-blue-500 cursor-help">ℹ️</span>
+              <!-- ✅ Tooltip del icono -->
+              <div
+                class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-blue-600 text-white text-xs rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap z-10"
+              >
+                🖱️ Haz doble click para usar la calculadora
+                <div
+                  class="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-blue-600"
+                ></div>
+              </div>
+            </span>
+          </label>
+
+          <div class="relative group">
+            <input
+              (dblclick)="abrirModal()"
+              [(ngModel)]="formularioData.monto"
+              required
+              type="number"
+              id="monto"
+              name="monto"
+              class="w-full p-3 pr-12 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 hover:border-blue-400 transition-colors cursor-pointer"
+            />
+
+            <!-- ✅ Icono calculadora dentro del input -->
+            <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+              <span class="text-gray-400 text-sm">🧮</span>
+            </div>
+
+            <!-- ✅ Tooltip del campo -->
+            <div
+              class="absolute -top-12 left-1/2 transform -translate-x-1/2 px-3 py-2 bg-green-600 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap z-10"
+            >
+              💡 Doble click para abrir calculadora
+              <div
+                class="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-green-600"
+              ></div>
+            </div>
           </div>
-          <div class="mb-4">
-            <label for="monto" class="block text-black font-bold mb-2">Monto:</label>
-            <input (dblclick)="abrirModal()" [(ngModel)]="formularioData.monto" required type="number" id="monto" name="monto" class="w-full p-2 border-white border-2 rounded">
-            <!-- TODO: Implementar una funcion onkeyup con REGEX para formatear el monto en tiempo real a formato moneda MXN -->
-            <!-- TODO: Crear notificaciones en google calendar desde https://console.cloud.google.com/ -->
+        </div>
+        <div>
+          <label class="block text-gray-700 font-semibold mb-2">Cargo Recurrente:</label>
+          <div class="flex items-center space-x-4">
+            <input
+              type="radio"
+              id="sin_vencimiento"
+              name="vencimiento_option"
+              value="sin_vencimiento"
+              class="mr-2"
+              (change)="formularioData.fecha_vencimiento = null"
+              [checked]="!formularioData.fecha_vencimiento"
+            />
+            No
+            <input
+              type="radio"
+              id="con_vencimiento"
+              name="vencimiento_option"
+              value="con_vencimiento"
+              class="mr-2"
+              (change)="
+                formularioData.fecha_vencimiento = formularioData.fecha_vencimiento || todayString()
+              "
+              [checked]="formularioData.fecha_vencimiento"
+            />
+            Sí
           </div>
-          <div class="mb-4">
-            <label for="fecha_vencimiento" class="block text-black font-bold mb-2">Fecha de Vencimiento (opcional):</label>
-            <input type="radio" id="sin_vencimiento" name="vencimiento_option" value="sin_vencimiento" class="mr-2"
-              (change)="formularioData.fecha_vencimiento = null" [checked]="!formularioData.fecha_vencimiento"> Sin Vencimiento
-            <input type="radio" id="con_vencimiento" name="vencimiento_option" value="con_vencimiento" class="mr-2"
-              (change)="formularioData.fecha_vencimiento = formularioData.fecha_vencimiento || todayString()" [checked]="formularioData.fecha_vencimiento"> Con Vencimiento
-            <input [(ngModel)]="formularioData.fecha_vencimiento" type="date" id="fecha_vencimiento" name="fecha_vencimiento" class="w-full p-2 border-white border-2 rounded">
-          </div>
-          <button type="submit"
-            [disabled]="!gastoFijoForm.form.valid"
-            class="h-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center disabled:bg-gray-400">
+          <label for="fecha_vencimiento" class="block text-gray-700 font-semibold mt-4"
+            >Fecha de Vencimiento:</label
+          >
+          <input
+            [(ngModel)]="formularioData.fecha_vencimiento"
+            type="date"
+            id="fecha_vencimiento"
+            name="fecha_vencimiento"
+            class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500"
+          />
+          <label for="fecha_recordatorio" class="block text-gray-700 font-semibold mt-4"
+            >Recordatorio:</label
+          >
+          <input
+            [(ngModel)]="formularioData.fecha_recordatorio"
+            type="date"
+            id="fecha_recordatorio"
+            name="fecha_recordatorio"
+            class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+        <button
+          type="submit"
+          [disabled]="!gastoFijoForm.form.valid"
+          class="w-full py-3 bg-gradient-to-r from-blue-600 to-blue-800 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition disabled:bg-gray-400"
+        >
           {{ gastoEnEdicion() ? 'Actualizar Gasto' : 'Crear Gasto' }}
         </button>
       </div>
     </form>
   </div>
 
-  <div id="lista_gastos_fijos" class="bg-amber-100 col-span-2 p-4 border-2 border-black rounded-2xl shadow-gray-500 shadow-lg">
+  <div
+    id="lista_gastos_fijos"
+    class="bg-amber-100 col-span-2 p-4 border-2 border-black rounded-2xl shadow-gray-500 shadow-lg"
+  >
     <h1 class="text-black text-3xl font-bold mb-4">Lista de Gastos Fijos</h1>
-    <hr class="my-4 border-gray-300">
-    <div id="gastos_seleccionados"
-     class="flex items-center justify-between bg-slate-50 border-l-4 border-l-red-500 rounded-r-lg p-3 mx-2 mb-4"
-     [hidden]="trashHide()">
-
-    <div class="flex items-center gap-3">
-      <div class="bg-red-500 text-white text-sm font-bold px-3 py-1 rounded-full">
-        {{ gastosSeleccionadosArr().length }}
+    <hr class="my-4 border-gray-300" />
+    <div
+      id="gastos_seleccionados"
+      class="flex items-center justify-between bg-slate-50 border-l-4 border-l-red-500 rounded-r-lg p-3 mx-2 mb-4"
+      [hidden]="trashHide()"
+    >
+      <div class="flex items-center gap-3">
+        <div class="bg-red-500 text-white text-sm font-bold px-3 py-1 rounded-full">
+          {{ gastosSeleccionadosArr().length }}
+        </div>
+        <span class="text-gray-700 font-medium">gastos seleccionados</span>
       </div>
-      <span class="text-gray-700 font-medium">gastos seleccionados</span>
+      <button
+        class="text-red-500 hover:bg-red-500 hover:text-white p-2 rounded-lg transition-all duration-200 group"
+        (click)="eliminarGastosSeleccionados()"
+      >
+        <img src="trash.svg" class="h-5 w-5 group-hover:scale-110 transition-transform" />
+      </button>
     </div>
-    <button class="text-red-500 hover:bg-red-500 hover:text-white p-2 rounded-lg transition-all duration-200 group" (click)="eliminarGastosSeleccionados()">
-      <img src="trash.svg" class="h-5 w-5 group-hover:scale-110 transition-transform" />
-    </button>
-  </div>
-  @defer (on viewport) {
+    @defer (on viewport) {
     <!-- Solo carga cuando el div es visible -->
     @for (gasto of gastosFijos(); track gasto.id) {
-      <input type="checkbox" id="gasto_{{ gasto.id }}" class="hidden peer gasto_item" (change)="onGastoSelect(gasto, $event)" />
+    <input
+      type="checkbox"
+      id="gasto_{{ gasto.id }}"
+      class="hidden peer gasto_item"
+      (change)="onGastoSelect(gasto, $event)"
+    />
 
-      <label for="gasto_{{ gasto.id }}" class="group bg-white p-3 rounded-lg shadow-sm mb-2 flex justify-between items-center hover:shadow-md transition-all duration-200">
-        <div>
-          <span class="font-medium">{{ gasto.name }}</span>
-          <small class="text-gray-500 block">{{ gasto.categoria_gasto }}</small>
-        </div>
-        <div class="flex items-center gap-2">
-          <span class="font-bold text-green-600">{{ gasto.monto | currency:'MXN' }}</span>
-          <!-- Oculto por defecto, visible en hover del grupo -->
-          <button
-            class="btnEdit md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-200 text-yellow-500 hover:bg-yellow-500 hover:text-white p-2 rounded-lg"
-            (click)="editarGastoSeleccionado(gasto)">
-            <img src="edit.svg" class="h-5 w-5" />
-          </button>
-        </div>
-      </label>
-    }
-  }
-  @placeholder {
+    <label
+      for="gasto_{{ gasto.id }}"
+      class="group bg-white p-3 rounded-lg shadow-sm mb-2 flex justify-between items-center hover:shadow-md transition-all duration-200"
+    >
+      <div>
+        <span class="font-medium">{{ gasto.name }}</span>
+        <small class="text-gray-500 block">{{ gasto.categoria_gasto }}</small>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="font-bold text-green-600">{{ gasto.monto | currency : 'MXN' }}</span>
+        <!-- Oculto por defecto, visible en hover del grupo -->
+        <button
+          class="btnEdit md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-200 text-yellow-500 hover:bg-yellow-500 hover:text-white p-2 rounded-lg"
+          (click)="editarGastoSeleccionado(gasto)"
+        >
+          <img src="edit.svg" class="h-5 w-5" />
+        </button>
+      </div>
+    </label>
+    } } @placeholder {
     <!-- Mientras no se carga -->
     <div class="animate-pulse">
       <div class="h-4 bg-gray-300 rounded mb-2"></div>
       <div class="h-4 bg-gray-300 rounded mb-2"></div>
       <div class="h-4 bg-gray-300 rounded"></div>
     </div>
-  } @loading {
+    } @loading {
     <!-- Mientras está cargando -->
     <div class="flex items-center justify-center py-8">
       <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
       <span class="ml-2">Cargando gastos...</span>
     </div>
-  } @error {
+    } @error {
     <!-- Si hay error -->
     <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
       <p>❌ Error al cargar los gastos</p>
     </div>
-  }
+    }
   </div>
 </div>
 
-@if(modalVisible())
-{
-  <div
-     class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50"
-     (click)="cerrarModal()">
-
+@if(modalVisible()) {
+<div
+  class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50"
+  (click)="cerrarModal()"
+>
   <!-- ✅ Contenido del modal -->
-  <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white"
-       (click)="$event.stopPropagation()">
-
+  <div
+    class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white"
+    (click)="$event.stopPropagation()"
+  >
     <!-- ✅ Header del modal -->
     <div class="flex items-center justify-between pb-3">
       <h3 class="text-lg font-bold text-gray-900">Calcular Gastos</h3>
-      <button (click)="cerrarModal()"
-              class="text-gray-400 hover:text-gray-600">
+      <button (click)="cerrarModal()" class="text-gray-400 hover:text-gray-600">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"
+          ></path>
         </svg>
       </button>
     </div>
 
     <!-- ✅ Cuerpo del modal -->
-   <div class="py-2">
-  <div class="mb-4">
-    <input #calculadoraInput
-           type="text"
-           placeholder="Ej: 80 * 30 (para gastos diarios)"
-           class="w-full p-3 border-2 rounded-md transition-colors"
-           [class.border-red-500]="!entradaValida()"
-           [class.border-green-500]="entradaValida() && calculadoraInput.value"
-           [class.border-gray-300]="entradaValida() || !calculadoraInput.value"
-           (input)="validarCaracteres(calculadoraInput.value)"
-           (keydown.enter)="calcularGasto(calculadoraInput.value); calculadoraInput.value=''; $event.preventDefault();" />
+    <div class="py-2">
+      <div class="mb-4">
+        <input
+          #calculadoraInput
+          type="text"
+          placeholder="Ej: 80 * 30 (para gastos diarios)"
+          class="w-full p-3 border-2 rounded-md transition-colors"
+          [class.border-red-500]="!entradaValida()"
+          [class.border-green-500]="entradaValida() && calculadoraInput.value"
+          [class.border-gray-300]="entradaValida() || !calculadoraInput.value"
+          (input)="validarCaracteres(calculadoraInput.value)"
+          (keydown.enter)="
+            calcularGasto(calculadoraInput.value);
+            calculadoraInput.value = '';
+            $event.preventDefault()
+          "
+        />
 
-    <!-- ✅ Mensaje de error -->
-    @if (mensajeError()) {
-      <p class="text-red-500 text-sm mt-1">{{ mensajeError() }}</p>
-    }
-  </div>
+        <!-- ✅ Mensaje de error -->
+        @if (mensajeError()) {
+        <p class="text-red-500 text-sm mt-1">{{ mensajeError() }}</p>
+        }
+      </div>
 
-  <!-- ✅ Ejemplos de uso -->
-  <div class="mb-4">
-    <p class="text-xs text-gray-600 mb-2">💡 Ejemplos:</p>
-    <div class="grid grid-cols-1 gap-1">
-      <button (click)="calculadoraInput.value='80*30'; validarCaracteres('80*30')"
-              class="text-left text-xs bg-gray-100 p-1 rounded hover:bg-gray-200">
-        80 * 30 (gasto diario × días del mes)
-      </button>
-      <button (click)="calculadoraInput.value='(1500+800)/2'; validarCaracteres('(1500+800)/2')"
-              class="text-left text-xs bg-gray-100 p-1 rounded hover:bg-gray-200">
-        (1500 + 800) / 2 (promedio de gastos)
-      </button>
-      <button (click)="calculadoraInput.value='250*4'; validarCaracteres('250*4')"
-              class="text-left text-xs bg-gray-100 p-1 rounded hover:bg-gray-200">
-        250 * 4 (gasto semanal × semanas)
-      </button>
+      <!-- ✅ Ejemplos de uso -->
+      <div class="mb-4">
+        <p class="text-xs text-gray-600 mb-2">💡 Ejemplos:</p>
+        <div class="grid grid-cols-1 gap-1">
+          <button
+            (click)="calculadoraInput.value = '80*30'; validarCaracteres('80*30')"
+            class="text-left text-xs bg-gray-100 p-1 rounded hover:bg-gray-200"
+          >
+            80 * 30 (gasto diario × días del mes)
+          </button>
+          <button
+            (click)="calculadoraInput.value = '(1500+800)/2'; validarCaracteres('(1500+800)/2')"
+            class="text-left text-xs bg-gray-100 p-1 rounded hover:bg-gray-200"
+          >
+            (1500 + 800) / 2 (promedio de gastos)
+          </button>
+          <button
+            (click)="calculadoraInput.value = '250*4'; validarCaracteres('250*4')"
+            class="text-left text-xs bg-gray-100 p-1 rounded hover:bg-gray-200"
+          >
+            250 * 4 (gasto semanal × semanas)
+          </button>
+        </div>
+      </div>
+
+      <!-- ✅ Resultado mejorado -->
+      <div class="bg-green-50 p-3 rounded-md">
+        <div class="flex justify-between items-center">
+          <span class="text-sm text-green-700">Resultado:</span>
+          <span class="font-bold text-lg text-green-800">
+            {{ calculoResultado() | currency : 'MXN' : 'symbol' : '1.2-2' }}
+          </span>
+        </div>
+      </div>
     </div>
-  </div>
-
-  <!-- ✅ Resultado mejorado -->
-  <div class="bg-green-50 p-3 rounded-md">
-    <div class="flex justify-between items-center">
-      <span class="text-sm text-green-700">Resultado:</span>
-      <span class="font-bold text-lg text-green-800">
-        {{ calculoResultado() | currency:'MXN':'symbol':'1.2-2' }}
-      </span>
-    </div>
-  </div>
-</div>
 
     <!-- ✅ Footer del modal -->
     <div class="flex items-center justify-end pt-3 space-x-2">
-      <button (click)="cerrarModal()"
-              class="px-4 py-2 bg-gray-500 text-white text-base font-medium rounded-md hover:bg-gray-600">
+      <button
+        (click)="cerrarModal()"
+        class="px-4 py-2 bg-gray-500 text-white text-base font-medium rounded-md hover:bg-gray-600"
+      >
         Cancelar
       </button>
-      <button (click)="confirmarAccion()"
-              class="px-4 py-2 bg-blue-500 text-white text-base font-medium rounded-md hover:bg-blue-600">
+      <button
+        (click)="confirmarAccion()"
+        class="px-4 py-2 bg-blue-500 text-white text-base font-medium rounded-md hover:bg-blue-600"
+      >
         Confirmar
       </button>
     </div>

@@ -34,7 +34,8 @@ export default class GastosFijosComponent implements OnInit {
     categoria: '',
     nombre: '',
     monto: 0,
-    fecha_vencimiento: null as Date | null
+    fecha_vencimiento: null as Date | null,
+    fecha_recordatorio: null as Date | null
   };
 
 
@@ -164,7 +165,8 @@ export default class GastosFijosComponent implements OnInit {
       categoria: '',
       nombre: '',
       monto: 0,
-      fecha_vencimiento: null
+      fecha_vencimiento: null,
+      fecha_recordatorio: null
     };
     this.gastoEnEdicion.set(null);
   }
@@ -229,7 +231,8 @@ export default class GastosFijosComponent implements OnInit {
       categoria: gasto.categoria_gasto,
       nombre: gasto.name,
       monto: gasto.monto,
-      fecha_vencimiento: gasto.fecha_vencimiento || null
+      fecha_vencimiento: gasto.fecha_vencimiento || null,
+      fecha_recordatorio: gasto.fecha_recordatorio || null
     };
 
     this.gastoEnEdicion.set(gasto);
