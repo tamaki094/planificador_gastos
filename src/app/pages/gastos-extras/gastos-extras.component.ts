@@ -22,6 +22,7 @@ export default class GastosExtras implements OnInit {
   gastosExtras = signal<Gasto[]>([]);
   trashHide = signal<boolean>(true);
   gastosSeleccionadosArr = signal<Gasto[]>([]);
+  gastoEnEdicion = signal<Gasto | null>(null);
 
   formularioData = {
     nombre: '',

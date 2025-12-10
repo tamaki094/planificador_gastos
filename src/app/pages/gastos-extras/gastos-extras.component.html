@@ -1,31 +1,77 @@
 <div class="container grid grid-cols-1 md:grid-cols-3 gap-4">
-   <div id="formulario_gasto_fijo"
-       class="bg-blue-300 col-span-1 p-4 border-2 border-black rounded-2xl shadow-gray-500 shadow-lg h-fit min-h-0">
+  <div id="formulario_gasto_fijo"
+       class="bg-blue-200 col-span-1 p-6 border border-gray-300 rounded-2xl shadow-lg h-fit">
 
-    <form #gastoExtraForm="ngForm" (ngSubmit)="onSubmit(gastoExtraForm)" id="formulario_gasto_extra" method="post">
-      <h1 class="text-black text-3xl font-bold">Formulario de Gasto Extra</h1>
+    <form #gastoExtraForm="ngForm" (ngSubmit)="onSubmit(gastoExtraForm)" method="post">
+      <!-- ✅ Header igual que gastos fijos -->
+      <h1 class="text-gray-800 text-3xl font-bold mb-2">Formulario de Gasto Extra</h1>
+      <p class="text-gray-500 mb-4">Registra tus gastos únicos o eventuales</p>
       <hr class="my-4 border-gray-300">
 
-      <div id="detalles_gasto_fijo" class="mt-4">
-          <div class="mb-4">
-            <label for="nombre" class="block text-black font-bold mb-2">Nombre del Gasto Extra:</label>
-            <input [(ngModel)]="formularioData.nombre" required type="text" id="nombre" name="nombre" class="w-full p-2 border-white border-2 rounded">
+      <!-- ✅ Contenido con el mismo espaciado -->
+      <div id="detalles_gasto_fijo" class="mt-4 space-y-4">
+
+        <!-- ✅ Campo Nombre con estilos mejorados -->
+        <div>
+          <label for="nombre" class="block text-gray-700 font-semibold mb-1">
+            Nombre del Gasto Extra:
+          </label>
+          <input [(ngModel)]="formularioData.nombre"
+                 required
+                 type="text"
+                 id="nombre"
+                 name="nombre"
+                 placeholder="Ej: Compra de muebles"
+                 class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 hover:border-blue-400 transition-colors">
+        </div>
+
+        <!-- ✅ Campo Monto con tooltip (opcional) -->
+        <div>
+          <label for="monto" class="block text-gray-700 font-semibold mb-1">
+            Monto:
+          </label>
+          <div class="relative group">
+            <input [(ngModel)]="formularioData.monto"
+                   required
+                   type="number"
+                   id="monto"
+                   name="monto"
+                   placeholder="0.00"
+                   min="0"
+                   step="0.01"
+                   class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 hover:border-blue-400 transition-colors">
+
+            <!-- ✅ Tooltip opcional (puedes quitarlo si no lo necesitas) -->
+            <div class="absolute -top-12 left-1/2 transform -translate-x-1/2 px-3 py-2 bg-gray-900 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap z-10">
+              💰 Ingresa el monto del gasto extra
+              <div class="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
+            </div>
           </div>
-          <div class="mb-4">
-            <label for="monto" class="block text-black font-bold mb-2">Monto:</label>
-            <input [(ngModel)]="formularioData.monto" required type="number" id="monto" name="monto" class="w-full p-2 border-white border-2 rounded">
-            <!-- TODO: Agregar una herramienta para calcular algun gasto  en el que no quieras sacar la calculadora para ver cuanto es en total al mes, ejemplo: Gasto $80 pesos de comida diarios y quiero saber cuanto es al mes, esto le ahorrara al usuario abrir la calculadora -->
-            <!-- TODO: Agregar funciond e vigencia de un gasto, como un pago de tarjeta de crwedito que dura 6 meses y despues ya no se paga. Podria ser  un checkbox que diga "Con Vigencia" y entonces aparecera un calendario para seleccionar la fecha de finalizacion. -->
-            <!-- TODO: Implementar una funcion onkeyup con REGEX para formatear el monto en tiempo real a formato moneda MXN -->
-          </div>
-          <button type="submit"
-            [disabled]="!gastoExtraForm.form.valid"
-            class="h-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center disabled:bg-gray-400">
-         Crear Gasto
+        </div>
+
+        <!-- ✅ Botón con los mismos estilos -->
+        <button type="submit"
+                [disabled]="!gastoExtraForm.form.valid"
+                class="w-full py-3 bg-gradient-to-r from-blue-600 to-blue-800 text-white font-semibold rounded-lg shadow-md hover:shadow-lg transition disabled:bg-gray-400 disabled:cursor-not-allowed">
+          {{ gastoEnEdicion() ? 'Actualizar Gasto' : 'Crear Gasto Extra' }}
         </button>
+
       </div>
+
+      <!-- ✅ Mensaje informativo (opcional) -->
+      <div class="mt-4 bg-blue-50 border border-blue-200 rounded-xl p-4">
+        <div class="flex items-start space-x-3">
+          <span class="text-blue-600 text-lg">💡</span>
+          <div class="text-sm text-blue-800">
+            <p class="font-medium">Tip:</p>
+            <p>Los gastos extras son únicos y no se repiten automáticamente.</p>
+          </div>
+        </div>
+      </div>
+
     </form>
   </div>
+
 
    <div id="lista_gastos_fijos" class="bg-amber-100 col-span-2 p-4 border-2 border-black rounded-2xl shadow-gray-500 shadow-lg">
     <h1 class="text-black text-3xl font-bold mb-4">Lista de Gastos Extras</h1>
