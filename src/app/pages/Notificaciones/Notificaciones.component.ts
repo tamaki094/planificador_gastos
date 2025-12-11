@@ -25,7 +25,8 @@ export default class NotificacionesComponent implements OnInit {
 
    formularioData = {
     filtroTexto: '',
-    fecha: '',
+    fechaInicio: '',
+    fechaFin: '',
     categoria: ''
   };
 
@@ -46,9 +47,29 @@ export default class NotificacionesComponent implements OnInit {
 
   filtrarNotificaciones() {
 
+    const filtroTexto = this.formularioData.filtroTexto.toLowerCase();
+    const fechaInicioFiltro = this.formularioData.fechaInicio;
+    const fechaFinFiltro = this.formularioData.fechaFin;
+    const categoriaFiltro = this.formularioData.categoria;
+
+    console.log("Filtrando con:\n" +
+      `Texto: ${filtroTexto}\n` +
+      `Fecha Inicio: ${fechaInicioFiltro}\n` +
+      `Fecha Fin: ${fechaFinFiltro}\n` +
+      `Categoría: ${categoriaFiltro}`
+    );
+
+
+
   }
 
   limpiarFiltros() {
+    this.formularioData = {
+      filtroTexto: '',
+      fechaInicio: '',
+      fechaFin: '',
+      categoria: ''
+    };
     this.filtrarNotificaciones();
   }
 

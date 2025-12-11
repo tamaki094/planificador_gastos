@@ -28,25 +28,38 @@ import { Gasto } from '../interfaces';
   providedIn: 'root'
 })
 export class GastoService {
-
-
-
   firestore : Firestore = inject(Firestore);
 
-
-   getAllGastosByUser(userId: string): Observable<Gasto[]> {
-    const gastosColeccion: CollectionReference<Gasto> = collection(this.firestore, 'gastos') as CollectionReference<Gasto>;
-    const gastosQuery: Query<Gasto> = query(gastosColeccion, where('usuario', '==', userId)) as Query<Gasto>;
-
+  getGastosColeccion(gastosQuery: Query<Gasto>): Observable<Gasto[]> {
     return collectionData(gastosQuery, { idField: 'id' })
       .pipe(
         map((gastos: any[]) => gastos.map(gasto => ({
           ...gasto,
           fecha_creacion: gasto.fecha_creacion?.toDate() || new Date(),
-          fecha_recordatorio: gasto.fecha_recordatorio?.toDate() || null
+          fecha_actualizacion: gasto.fecha_actualizacion?.toDate() || new Date(),
+          fecha_recordatorio: gasto.fecha_recordatorio?.toDate() || null,
+          fecha_vencimiento: gasto.fecha_vencimiento?.toDate() || null
         })))
       ) as Observable<Gasto[]>;
   }
+
+
+  getAllGastosByUser(userId: string): Observable<Gasto[]> {
+    const gastosColeccion: CollectionReference<Gasto> = collection(this.firestore, 'gastos') as CollectionReference<Gasto>;
+    const gastosQuery: Query<Gasto> = query(gastosColeccion, where('usuario', '==', userId)) as Query<Gasto>;
+
+    return this.getGastosColeccion(gastosQuery);
+  }
+
+
+  getGastosByCategoria(categoria: string): Observable<Gasto[]> {
+    const gastosColeccion: CollectionReference<Gasto> = collection(this.firestore, 'gastos') as CollectionReference<Gasto>;
+    const gastosQuery: Query<Gasto> = query(gastosColeccion, where('categoria_gasto', '==', categoria)) as Query<Gasto>;
+
+    return this.getGastosColeccion(gastosQuery);
+  }
+
+
 
 
   /**
@@ -57,13 +70,7 @@ export class GastoService {
     const gastosColeccion: CollectionReference<Gasto> = collection(this.firestore, 'gastos') as CollectionReference<Gasto>;
     const gastosQuery: Query<Gasto> = query(gastosColeccion, where('tipo_gasto', '==', tipo)) as Query<Gasto>;
 
-    return collectionData(gastosQuery,{ idField: 'id'})
-      .pipe(
-        map((gastos: any[]) => gastos.map(gasto => ({
-          ...gasto,
-          fecha_creacion: gasto.fecha_creacion?.toDate() || new Date()
-        })))
-      ) as Observable<Gasto[]>;
+    return this.getGastosColeccion(gastosQuery);
   }
 
 
@@ -96,15 +103,7 @@ export class GastoService {
       orderBy('fecha_creacion', 'desc')
     );
 
-    return collectionData(gastoQuery, {idField: 'id'})
-    .pipe(
-      map((gastos : any[]) => gastos.map(
-        gasto => ({
-          ...gasto,
-          fecha_creacion: gasto.fecha_creacion?.toDate() || new Date()
-        })
-      ))
-    )
+    return this.getGastosColeccion(gastoQuery);
   }
 
   /**
@@ -150,6 +149,7 @@ export class GastoService {
     const gastoDocRef : DocumentReference<Gasto> = doc(this.firestore, `gastos/${id}`) as DocumentReference<Gasto>;
     return deleteDoc(gastoDocRef);
   }
+
   async eliminarGastos(gastos: Gasto[]) : Promise<void> {
     const batch : WriteBatch = writeBatch(this.firestore);
     gastos.forEach(gasto => {
