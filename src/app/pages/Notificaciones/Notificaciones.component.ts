@@ -59,8 +59,36 @@ export default class NotificacionesComponent implements OnInit {
       `Categoría: ${categoriaFiltro}`
     );
 
+    this.gastoService.getAllGastosByUser(this.user?.uid || '').subscribe((gastos) => {
+      let gastosFiltrados = gastos;
 
+      if (filtroTexto) {
+        gastosFiltrados = gastosFiltrados.filter(gasto =>
+          gasto.name.toLowerCase().includes(filtroTexto)
+        );
+      }
 
+      if (fechaInicioFiltro) {
+        const fechaInicio = new Date(fechaInicioFiltro);
+        gastosFiltrados = gastosFiltrados.filter(gasto =>
+          gasto.fecha_creacion >= fechaInicio
+        );
+      }
+      if (fechaFinFiltro) {
+        const fechaFin = new Date(fechaFinFiltro);
+        gastosFiltrados = gastosFiltrados.filter(gasto =>
+          gasto.fecha_creacion <= fechaFin
+        );
+      }
+
+      if (categoriaFiltro) {
+        gastosFiltrados = gastosFiltrados.filter(gasto =>
+          gasto.categoria_gasto === categoriaFiltro
+        );
+      }
+
+      this.gastos.set(gastosFiltrados);
+    });
   }
 
   limpiarFiltros() {

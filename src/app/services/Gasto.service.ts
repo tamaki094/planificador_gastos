@@ -59,6 +59,17 @@ export class GastoService {
     return this.getGastosColeccion(gastosQuery);
   }
 
+  getGastosByFechaRango(fechaInicio: Date, fechaFin: Date): Observable<Gasto[]> {
+    const gastosColeccion: CollectionReference<Gasto> = collection(this.firestore, 'gastos') as CollectionReference<Gasto>;
+    const gastosQuery: Query<Gasto> = query(
+      gastosColeccion,
+      where('fecha_creacion', '>=', Timestamp.fromDate(fechaInicio)),
+      where('fecha_creacion', '<=', Timestamp.fromDate(fechaFin))
+    ) as Query<Gasto>;
+
+    return this.getGastosColeccion(gastosQuery);
+  }
+
 
 
 
