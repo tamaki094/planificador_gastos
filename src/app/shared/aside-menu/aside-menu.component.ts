@@ -11,7 +11,8 @@ import {
   faSignIn,
   faUserPlus,
   faTimes,
-  faCreditCard
+  faCreditCard,
+  faMessage
 } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
@@ -29,7 +30,8 @@ export class AsideMenuComponent {
   faSignIn = faSignIn;
   faUserPlus = faUserPlus;
   faTimes = faTimes;
-  faCreditCard = faCreditCard
+  faCreditCard = faCreditCard;
+  faMessage = faMessage;
 
   onSignIn = output<void>();
   onSignOut = output<void>();

@@ -44,7 +44,7 @@ export default class GastosFijosComponent implements OnInit {
       if(user){
         console.log('🔍 Auth state changed in GastosFijosComponent:', user);
 
-        this.gastoService.getAllGastos(1).subscribe((gastos : Gasto[])=> {
+        this.gastoService.getAllGastos(1, user.uid).subscribe((gastos : Gasto[])=> {
           console.log('Gastos obtenidos:', gastos);
           this.gastosFijos.set(gastos);
         });

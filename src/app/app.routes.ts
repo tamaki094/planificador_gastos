@@ -37,6 +37,10 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/Login/Login.component')
   },
   {
+    path: 'chat',
+    loadComponent: () => import('./pages/Chat/chat.component')
+  },
+  {
     path: '**',
     redirectTo: 'gastos-fijos'
   }

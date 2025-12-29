@@ -77,9 +77,13 @@ export class GastoService {
    * Obtiene todos los gastos desde Firestore
    * @returns Observable con la lista de gastos
    */
-  getAllGastos(tipo : number): Observable<Gasto[]> {
+  getAllGastos(tipo : number, userId: string): Observable<Gasto[]> {
     const gastosColeccion: CollectionReference<Gasto> = collection(this.firestore, 'gastos') as CollectionReference<Gasto>;
-    const gastosQuery: Query<Gasto> = query(gastosColeccion, where('tipo_gasto', '==', tipo)) as Query<Gasto>;
+    const gastosQuery: Query<Gasto> = query(
+      gastosColeccion,
+      where('tipo_gasto', '==', tipo),
+      where('usuario', '==', userId)
+    ) as Query<Gasto>;
 
     return this.getGastosColeccion(gastosQuery);
   }
@@ -123,7 +127,6 @@ export class GastoService {
    * @returns Promesa con el resultado de la operación
    */
   async crearGasto(gasto : Gasto): Promise<any>{
-    debugger;
     console.log('Creando gasto:', gasto);
     const gastosColeccion : CollectionReference<Gasto> = collection(this.firestore, 'gastos') as CollectionReference<Gasto>;
     const gastoData = {

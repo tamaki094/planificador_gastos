@@ -57,12 +57,20 @@
         },
         "serve": {
           "builder": "@angular/build:dev-server",
+          "options": {
+            "port": 4200,
+            "host": "localhost"
+          },
           "configurations": {
             "production": {
               "buildTarget": "PlanificadorGastos:build:production"
             },
             "development": {
-              "buildTarget": "PlanificadorGastos:build:development"
+              "buildTarget": "PlanificadorGastos:build:development",
+              "headers": {
+                "Cross-Origin-Opener-Policy": "same-origin-allow-popups",
+                "Cross-Origin-Embedder-Policy": "unsafe-none"
+              }
             }
           },
           "defaultConfiguration": "development"

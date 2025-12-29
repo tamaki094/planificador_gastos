@@ -1,67 +1,83 @@
 import { Injectable } from '@angular/core';
-import { Auth, signInWithPopup, GoogleAuthProvider, signOut} from '@angular/fire/auth';
-import { Router } from '@angular/router';
-import { OAuthCredential, onAuthStateChanged, User } from 'firebase/auth';
+import {
+  Auth,
+  GoogleAuthProvider,
+  signInWithPopup,
+  signOut,
+  UserCredential
+} from '@angular/fire/auth';
+import { onAuthStateChanged, User } from 'firebase/auth';
 import { BehaviorSubject, Observable } from 'rxjs';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class AuthService {
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$: Observable<User | null> = this.currentUserSubject.asObservable();
-  public accesToken : string  | undefined;
+  public accessToken?: string;
 
   constructor(private auth: Auth) {
-    // Escucha cambios en el estado de autenticación
-    onAuthStateChanged(this.auth, (user) => {
-      this.currentUserSubject.next(user);
-    });
+    onAuthStateChanged(this.auth, (user) => this.currentUserSubject.next(user));
   }
 
-  async loginWithGoogle(){
-    try {
-      const provider = new GoogleAuthProvider();
-      provider.addScope('https://www.googleapis.com/auth/calendar.events');
-      provider.addScope('email');
-      provider.addScope('profile');
+  // ✅ Versión simple que funciona (como la tenías antes)
+  async loginWithGoogle(): Promise<UserCredential> {
+    const provider = new GoogleAuthProvider();
+    provider.addScope('https://www.googleapis.com/auth/calendar.events');
+    provider.addScope('email');
+    provider.addScope('profile');
+    provider.setCustomParameters({ prompt: 'select_account' });
 
+    try {
       console.log('🔄 Iniciando login con Google...');
 
       const result = await signInWithPopup(this.auth, provider);
-
       const credential = GoogleAuthProvider.credentialFromResult(result);
-      this.accesToken = credential?.accessToken;
+      this.accessToken = credential?.accessToken || undefined;
 
-      if (!this.accesToken) {
-        console.warn('⚠️ No se obtuvo el access token. Revisa los scopes.');
-      }
-      else {
-        console.log('✅ Login con Google exitoso. Access Token obtenido');
-      }
-
-      console.log('✅ Usuario autenticado:', result.user?.email);
+      console.log('✅ Login exitoso:', result.user?.email);
+      console.log('🔑 Access Token obtenido:', !!this.accessToken);
 
       return result;
+    } catch (error: any) {
+      console.error('❌ Error en login:', error);
 
-    }
-    catch (error: any) {
-      console.error('❌ Error durante el login con Google:', error);
+      if (error.code === 'auth/popup-blocked') {
+        alert('⚠️ El popup fue bloqueado. Por favor, permite popups para este sitio.');
+      } else if (error.code === 'auth/popup-closed-by-user') {
+        console.log('ℹ️ Usuario cerró el popup');
+      }
+
       throw error;
     }
   }
 
-   async logout(){
-    return await signOut(this.auth)
-  }
-
-  getCurrentUser(){
-    return this.auth.currentUser;
+  async logout() {
+    try {
+      await signOut(this.auth);
+      this.accessToken = undefined;
+      console.log('✅ Logout exitoso');
+    } catch (error) {
+      console.error('❌ Error en logout:', error);
+    }
   }
 
   isAuthenticated(): boolean {
     return !!this.auth.currentUser;
   }
 
+  getCurrentUser(): User | null {
+    return this.auth.currentUser;
+  }
 
+  getCurrentUserUID(): string {
+    return this.auth.currentUser?.uid || 'desconocido';
+  }
+
+  getCurrentUserEmail(): string {
+    return this.auth.currentUser?.email || 'sin-email';
+  }
+
+  get accesToken(): string | undefined {
+    return this.accessToken;
+  }
 }

@@ -61,6 +61,7 @@ export class SueldoService {
 
 
     async guardarSueldo(sueldo: Sueldo): Promise<boolean> {
+      debugger;
       try {
         const sueldoColeccion: CollectionReference<Sueldo> = collection(this.firestore, 'sueldo') as CollectionReference<Sueldo>;
         const sueldoQuery: Query<Sueldo> = query(sueldoColeccion, where('usuario', '==', sueldo.usuario)) as Query<Sueldo>;
@@ -68,10 +69,7 @@ export class SueldoService {
 
         const snapshot : QuerySnapshot<Sueldo> = await getDocs(sueldoQuery);
 
-        if (snapshot.size > 0) {
 
-          await updateDoc
-        }
 
         // Crear nuevo sueldo
         const sueldoData = {
@@ -79,6 +77,12 @@ export class SueldoService {
           fecha_creacion: sueldo.fecha_creacion ? Timestamp.fromDate(sueldo.fecha_creacion) : Timestamp.now(),
           fecha_actualizacion: Timestamp.now()
         };
+
+         if (snapshot.size > 0) {
+
+          await updateDoc(doc(sueldoColeccion, snapshot.docs[0].id), sueldoData);
+          return true;
+        }
 
         await addDoc(sueldoColeccion, sueldoData);
         return true; // Sueldo creado exitosamente

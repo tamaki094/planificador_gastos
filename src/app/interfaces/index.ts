@@ -3,3 +3,5 @@ export * from './Gasto';
 export * from './TipoGasto';
 export * from './Sueldo';
 export * from './Montos';
+export * from './Mensaje';
+export * from './Contacto';
