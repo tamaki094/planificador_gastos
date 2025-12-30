@@ -1,6 +1,10 @@
 <div id="contactos" class="grid grid-cols-[25%_1fr] gap-4">
   <div class="bg-blue-200 p-4">
-    Columna izquierda (25%)
+    @for (contacto of contactos(); track contacto.id) {
+      <div class="mb-2 p-2 bg-white rounded shadow">
+        {{contacto.amigo}}
+      </div>
+    }
   </div>
   <div id="mensajes" class="bg-green-200 p-4">
     Columna derecha (75% - resto)

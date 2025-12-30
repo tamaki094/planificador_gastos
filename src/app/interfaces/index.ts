@@ -5,3 +5,5 @@ export * from './Sueldo';
 export * from './Montos';
 export * from './Mensaje';
 export * from './Contacto';
+export * from './Usuario';
+export * from './ContactoConUsuario';

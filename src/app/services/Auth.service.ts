@@ -1,4 +1,15 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
+import {
+  Firestore, // El servicio principal de Firestore
+  collection, // Para obtener una referencia a una colección
+  collectionData, // Para obtener un Observable de la colección (con ID)
+  doc, // Para obtener una referencia a un documento específico
+  docData, // Para obtener un Observable de un documento (con ID)
+  query, // Para construir consultas
+  where, // Para filtros en las consultas
+  getDocs, // Para obtener un snapshot de la consulta (una sola vez)
+  setDoc
+} from '@angular/fire/firestore';
 import {
   Auth,
   GoogleAuthProvider,
@@ -8,12 +19,15 @@ import {
 } from '@angular/fire/auth';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { Usuario } from '../interfaces';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$: Observable<User | null> = this.currentUserSubject.asObservable();
   public accessToken?: string;
+
+  firestore : Firestore = inject(Firestore);
 
   constructor(private auth: Auth) {
     onAuthStateChanged(this.auth, (user) => this.currentUserSubject.next(user));
@@ -37,6 +51,9 @@ export class AuthService {
       console.log('✅ Login exitoso:', result.user?.email);
       console.log('🔑 Access Token obtenido:', !!this.accessToken);
 
+      await this.createOrUpdateUser(result.user);
+
+
       return result;
     } catch (error: any) {
       console.error('❌ Error en login:', error);
@@ -48,6 +65,33 @@ export class AuthService {
       }
 
       throw error;
+    }
+  }
+
+  private async createOrUpdateUser(user: User): Promise<void> {
+    try {
+      const userRef = doc(this.firestore, 'usuarios', user.uid);
+
+      const userData: Usuario = {
+        uid: user.uid,
+        nombre: user.displayName || 'Usuario',
+        correo: user.email || '',
+        foto_url: user.photoURL || '',
+        telefono: user.phoneNumber || '',
+        email_verificado: user.emailVerified,
+        proveedor: user.providerData[0]?.providerId || 'google',
+        fecha_creacion: user.metadata.creationTime ? new Date(user.metadata.creationTime) : new Date(),
+        ultimo_login: new Date(),
+        estatus_activo: true,
+        fecha_actualizacion: new Date()
+      };
+
+      await setDoc(userRef, userData, { merge: true });
+
+      console.log('✅ Usuario creado/actualizado en Firestore:', user.uid);
+    }
+    catch (error) {
+      console.error('❌ Error al crear/actualizar usuario:', error);
     }
   }
 
