@@ -29,7 +29,6 @@ import { Auth, user } from '@angular/fire/auth';
   providedIn: 'root'
 })
 export class ContactoService {
-
   firestore : Firestore = inject(Firestore);
   auth : Auth = inject(Auth);
 
@@ -45,6 +44,17 @@ export class ContactoService {
       ) as Observable<Contacto[]>;
   }
 
+   getUsuariosColeccion(usuariosQuery: Query<Usuario>): Observable<Usuario[]> {
+    return collectionData(usuariosQuery, { idField: 'id' })
+      .pipe(
+        map((usuario: any[]) => usuario.map(usuario => ({
+          ...usuario,
+          fecha_creacion: usuario.fecha_creacion?.toDate() || new Date(),
+        })))
+      ) as Observable<Usuario[]>;
+  }
+
+
 
   getContactosByUser(userId: string): Observable<Contacto[]> {
     console.log('Obteniendo contactos para el usuario:', userId);
@@ -55,6 +65,7 @@ export class ContactoService {
   }
 
   getUserDataByUID(userUID: string): Observable<any> {
+    console.log('Obteniendo datos del usuario para UID:', userUID);
     const userRef = doc(this.firestore, 'usuarios', userUID);
 
     return docData(userRef, { idField: 'id' }).pipe(
@@ -78,46 +89,61 @@ export class ContactoService {
   }
 
   // ✅ INNER JOIN con tipado correcto
-getContactosWithUserDataInnerJoin(userId: string): Observable<ContactoConUsuario[]> {
-  return this.getContactosByUser(userId).pipe(
-    switchMap(contactos => {
-      if (contactos.length === 0) {
-        return of([]);
-      }
+  getContactosWithUserDataInnerJoin(userId: string): Observable<ContactoConUsuario[]> {
+    return this.getContactosByUser(userId).pipe(
+      switchMap(contactos => {
+        if (contactos.length === 0) {
+          return of([]);
+        }
 
-      const contactosWithUserData = contactos.map(contacto => {
-        return this.getUserDataByUID(contacto.usuario).pipe(
-          map(userData => ({
-            contacto: contacto,
-            userData: userData
-          }))
-        );
-      });
+        const contactosWithUserData = contactos.map(contacto => {
+          return this.getUserDataByUID(contacto.amigo).pipe(
+            map(userData => ({
+              contacto: contacto,
+              userData: userData
+            }))
+          );
+        });
+        return combineLatest(contactosWithUserData);
+      }),
+      // ✅ Filtrar solo usuarios válidos
+      map(results => results.filter(item =>
+        item.userData !== null &&
+        item.userData.uid !== 'Desconocido' // Evitar datos por defecto
+      )),
+      // ✅ Mapear usando la interface Usuario
+      map(results => results.map(item => ({
+        ...item.contacto,
+        usuarioData: {
+          uid: item.userData.uid,
+          nombre: item.userData.nombre,
+          correo: item.userData.correo,
+          foto_url: item.userData.foto_url,
+          telefono: item.userData.telefono,
+          email_verificado: item.userData.email_verificado,
+          proveedor: item.userData.proveedor,
+          fecha_creacion: item.userData.fecha_creacion,
+          ultimo_login: item.userData.ultimo_login,
+          estatus_activo: item.userData.estatus_activo,
+          fecha_actualizacion: item.userData.fecha_actualizacion
+        } as Usuario
+      } as ContactoConUsuario)))
+    );
+  }
 
-      return combineLatest(contactosWithUserData);
-    }),
-    // ✅ Filtrar solo usuarios válidos
-    map(results => results.filter(item =>
-      item.userData !== null &&
-      item.userData.uid !== 'Desconocido' // Evitar datos por defecto
-    )),
-    // ✅ Mapear usando la interface Usuario
-    map(results => results.map(item => ({
-      ...item.contacto,
-      usuarioData: {
-        uid: item.userData.uid,
-        nombre: item.userData.nombre,
-        correo: item.userData.correo,
-        foto_url: item.userData.foto_url,
-        telefono: item.userData.telefono,
-        email_verificado: item.userData.email_verificado,
-        proveedor: item.userData.proveedor,
-        fecha_creacion: item.userData.fecha_creacion,
-        ultimo_login: item.userData.ultimo_login,
-        estatus_activo: item.userData.estatus_activo,
-        fecha_actualizacion: item.userData.fecha_actualizacion
-      } as Usuario
-    } as ContactoConUsuario)))
-  );
-}
+  getUserDataByUsuario(usuario: string): Observable<any> {
+    console.log('Obteniendo datos del usuario para usuario:', usuario);
+    const usuariosColeccion: CollectionReference<Usuario> = collection(this.firestore, 'usuarios') as CollectionReference<Usuario>;
+    const usuariosQuery: Query<Usuario> = query(usuariosColeccion, where('usuario', '==', usuario)) as Query<Usuario>;
+    return this.getUsuariosColeccion(usuariosQuery).pipe(
+      map(users => users.length > 0 ? users[0] : null)
+    );
+  }
+
+  buscarUsuarioPorEmail(email: string) : Usuario {
+    return {} as Usuario;
+  }
+  agregarContacto(uid: string, nombre: string, correo: string) {
+    throw new Error('Method not implemented.');
+  }
 }
