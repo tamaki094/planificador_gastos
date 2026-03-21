@@ -1,13 +1,14 @@
-import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ContactoService } from '../../services/Contacto.service';
 import { Contacto, ContactoConUsuario, Usuario } from '../../interfaces';
 import { AuthService } from '../../services/Auth.service';
 import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ChatItemComponent } from '../../components/chat-item/chat-item.component';
 
 @Component({
   selector: 'chat',
-  imports: [DatePipe, FormsModule],
+  imports: [DatePipe, FormsModule, ChatItemComponent],
   templateUrl: './chat.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -18,11 +19,13 @@ export default class ChatComponent implements OnInit {
   contactos = signal<Contacto[]>([]);
   contactosConUsuario = signal<ContactoConUsuario[]>([]);
   userId : string | null = null;
+  contactoSeleccionado = signal<ContactoConUsuario | null>(null);
 
   modalAbierto = signal(false);
   emailBusqueda = signal('');
   usuarioEncontrado = signal<Usuario | null>(null);
   buscandoUsuario = signal(false);
+  searchContactos = signal('');
 
 
   async ngOnInit() {
@@ -50,12 +53,22 @@ export default class ChatComponent implements OnInit {
     this.usuarioEncontrado.set(null);
   }
 
+  contactosFiltrados = computed(() => {
+    const term = this.searchContactos().toLowerCase();
+    if (!term) return this.contactosConUsuario();
+
+    return this.contactosConUsuario().filter(contacto =>
+      contacto.usuarioData.nombre.toLowerCase().includes(term) ||
+      contacto.usuarioData.correo.toLowerCase().includes(term)
+    );
+  });
+
   // ✅ Buscar usuario por email
-  async buscarUsuario(event? : KeyboardEvent) {
+  async buscarUsuario() {
 
-    const email = this.emailBusqueda().trim() || 'sin email';
+    const email = this.emailBusqueda().trim();
 
-    console.log('Buscando usuario por email...' + email);
+    console.log('🔍 Buscando usuario con email:', email); // ✅ Debug
 
     if (email.length < 3) {
       this.usuarioEncontrado.set(null);
@@ -65,22 +78,21 @@ export default class ChatComponent implements OnInit {
     this.buscandoUsuario.set(true);
 
     try {
-      // Aquí usas tu ContactoService para buscar por email
       const usuario = await this.contactoService.buscarUsuarioPorEmail(email);
+      console.log('👤 Usuario encontrado:', usuario); // ✅ Debug
       this.usuarioEncontrado.set(usuario);
-
-      if (!usuario) {
-        if(event && event.key === 'Enter') {
-          this.abrirModal();
-        }
-
-      }
     } catch (error) {
-      console.error('Error buscando usuario:', error);
+      console.error('❌ Error buscando usuario:', error);
       this.usuarioEncontrado.set(null);
     } finally {
       this.buscandoUsuario.set(false);
     }
+  }
+
+  // ✅ MÉTODO PARA BUSCAR CONTACTOS EXISTENTES (sidebar)
+  buscarContactosExistentes(event: any) {
+    this.searchContactos.set(event.target.value);
+    console.log('🔍 Filtrando contactos con término:', event.target.value);
   }
 
   // ✅ Agregar amigo
@@ -101,6 +113,10 @@ export default class ChatComponent implements OnInit {
   }
   loadContactos() {
     throw new Error('Method not implemented.');
+  }
+
+  seleccionarContacto(contacto: ContactoConUsuario) {
+    this.contactoSeleccionado.set(contacto);
   }
 
 

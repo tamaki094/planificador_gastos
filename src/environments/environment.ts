@@ -8,5 +8,8 @@ export const environment = {
     messagingSenderId: "520242405013",
     appId: "1:520242405013:web:aafa9eb3df8e1e6cf4c59c",
     measurementId: "G-0Z7P6EE2YB"
+  },
+  tiendaItalika:{
+    apiUrl: 'http://127.0.0.1:8000/api'
   }
 };

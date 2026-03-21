@@ -112,5 +112,36 @@
        }
 
       </ul>
+      <ul class="mb-4 flex flex-col gap-1">
+        <li class="mx-3.5 mt-4 mb-2">
+          <p class="block antialiased font-sans text-sm leading-normal text-white font-black uppercase opacity-75">
+            tienda italika  <fa-icon [icon]="faMotorcycle" class="fa-lg"></fa-icon>
+          </p>
+        </li>
+        <li>
+          <a routerLink="/tienda" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+            <button class="middle none font-sans font-bold center transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 rounded-lg text-white hover:bg-white/10 active:bg-white/30 w-full flex items-center gap-4 px-4 capitalize" type="button">
+              <fa-icon [icon]="faUser" class="fa-lg"></fa-icon>
+              <p class="block antialiased font-sans text-base leading-relaxed text-inherit font-medium capitalize">Login Tienda</p>
+            </button>
+          </a>
+        </li>
+       <li>
+          <a routerLink="/tienda/catalogo" routerLinkActive="active">
+            <button class="middle none font-sans font-bold center transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 rounded-lg text-white hover:bg-white/10 active:bg-white/30 w-full flex items-center gap-4 px-4 capitalize" type="button">
+              <fa-icon [icon]="faShoppingBag" class="fa-lg"></fa-icon>
+              <p class="block antialiased font-sans text-base leading-relaxed text-inherit font-medium capitalize">Catalogo de Productos</p>
+            </button>
+          </a>
+        </li>
+        <li>
+          <a routerLink="/tienda/ordenes-compra" routerLinkActive="active">
+            <button class="middle none font-sans font-bold center transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 rounded-lg text-white hover:bg-white/10 active:bg-white/30 w-full flex items-center gap-4 px-4 capitalize" type="button">
+              <fa-icon [icon]="faShoppingCart" class="fa-lg"></fa-icon>
+              <p class="block antialiased font-sans text-base leading-relaxed text-inherit font-medium capitalize">Carrito Productos</p>
+            </button>
+          </a>
+        </li>
+      </ul>
     </div>
   </aside>

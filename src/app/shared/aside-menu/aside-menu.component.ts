@@ -12,7 +12,10 @@ import {
   faUserPlus,
   faTimes,
   faCreditCard,
-  faMessage
+  faMotorcycle,
+  faMessage,
+  faShoppingCart,
+  faShoppingBag
 } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
@@ -31,8 +34,10 @@ export class AsideMenuComponent {
   faUserPlus = faUserPlus;
   faTimes = faTimes;
   faCreditCard = faCreditCard;
+  faMotorcycle = faMotorcycle;
   faMessage = faMessage;
-
+  faShoppingCart = faShoppingCart;
+  faShoppingBag = faShoppingBag;
   onSignIn = output<void>();
   onSignOut = output<void>();
 
