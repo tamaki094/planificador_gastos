@@ -34,6 +34,7 @@ export class AuthService {
   private firestore : Firestore = inject(Firestore);
 
   private apiUrl = environment.finance_flow_api.apiUrl;
+  private gcfPhotoUrl = environment.google_cloud_functions.syncprofilephoto;
 
   constructor(private auth: Auth) {
     onAuthStateChanged(this.auth, (user) => this.currentUserSubject.next(user));
@@ -93,15 +94,38 @@ export class AuthService {
         fecha_actualizacion: new Date()
       };
 
-      console.log('Enviando usuario a API Java...', userData);
+      let fotoRespaldada = userData.foto_url || '';
+
+      if(userData.foto_url){
+        try{
+          const gcfResponse: any = await firstValueFrom(
+            this.http.post(this.gcfPhotoUrl, {
+              uid: userData.uid,
+              foto_url: userData.foto_url
+            })
+          );
+
+          if(gcfResponse?.foto_url_gcs){
+            fotoRespaldada = gcfResponse.foto_url_gcs;
+            console.log('Foto respaldada en Cloud storage:', fotoRespaldada);
+          }
+        }
+        catch(gcfError){
+          console.warn('No se pudo respaldar la foto en cloud storage, usando fotoUrl por defecto: ', gcfError);
+        }
+      }
+
+      console.log('Enviando usuario a API NET...', userData);
 
       await firstValueFrom(this.http.post(this.apiUrl + 'Usuario' , userData));
 
-      console.log('✅ Usuario guardado/sincronizado en API Java con éxito');
+      console.log('✅ Usuario guardado/sincronizado en API NET con éxito');
 
       await setDoc(userRef, userData, { merge: true });
 
       console.log('✅ Usuario creado/actualizado en Firestore:', user.uid);
+
+      userData.foto_url = fotoRespaldada;
 
     }
     catch (error) {

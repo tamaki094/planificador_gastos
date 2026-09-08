@@ -15,6 +15,10 @@ export const environment = {
   finance_flow_api:
   {
     apiUrl : 'https://localhost:44353/api/'
+  },
+  google_cloud_functions:
+  {
+    syncprofilephoto : 'https://us-central1-planificadorgastos.cloudfunctions.net/syncProfilePhoto'
   }
 
 };
