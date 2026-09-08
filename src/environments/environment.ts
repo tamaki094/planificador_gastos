@@ -11,5 +11,10 @@ export const environment = {
   },
   tiendaItalika:{
     apiUrl: 'http://127.0.0.1:8000/api'
+  },
+  finance_flow_api:
+  {
+    apiUrl : 'https://localhost:44353/api/'
   }
+
 };

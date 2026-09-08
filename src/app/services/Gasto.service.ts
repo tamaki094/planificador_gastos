@@ -20,15 +20,20 @@ import {
   writeBatch,
   WriteBatch
 } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
+import { firstValueFrom, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Gasto } from '../interfaces';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GastoService {
-  firestore : Firestore = inject(Firestore);
+  private firestore : Firestore = inject(Firestore);
+  private http = inject(HttpClient);
+  private apiUrl = environment.finance_flow_api.apiUrl;
+
 
   getGastosColeccion(gastosQuery: Query<Gasto>): Observable<Gasto[]> {
     return collectionData(gastosQuery, { idField: 'id' })
@@ -127,13 +132,19 @@ export class GastoService {
    * @returns Promesa con el resultado de la operación
    */
   async crearGasto(gasto : Gasto): Promise<any>{
+    debugger;
     console.log('Creando gasto:', gasto);
+
+    // [com.edri.financeflowapi]
+    await firstValueFrom(this.http.post(this.apiUrl + 'Gasto' , gasto));
+
     const gastosColeccion : CollectionReference<Gasto> = collection(this.firestore, 'gastos') as CollectionReference<Gasto>;
     const gastoData = {
       ...gasto,
       fecha_creacion: gasto.fecha_creacion ? Timestamp.fromDate(gasto.fecha_creacion) : Timestamp.now(),
       fecha_vencimiento: gasto.fecha_vencimiento ? Timestamp.fromDate(gasto.fecha_vencimiento) : null
     };
+
     return await addDoc(gastosColeccion, gastoData as DocumentData);
   }
 

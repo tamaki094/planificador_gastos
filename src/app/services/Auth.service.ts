@@ -1,4 +1,6 @@
 import { inject, Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
 import {
   Firestore, // El servicio principal de Firestore
   collection, // Para obtener una referencia a una colección
@@ -20,6 +22,7 @@ import {
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Usuario } from '../interfaces';
+import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -27,7 +30,10 @@ export class AuthService {
   public currentUser$: Observable<User | null> = this.currentUserSubject.asObservable();
   public accessToken?: string;
 
-  firestore : Firestore = inject(Firestore);
+  private http = inject(HttpClient);
+  private firestore : Firestore = inject(Firestore);
+
+  private apiUrl = environment.finance_flow_api.apiUrl;
 
   constructor(private auth: Auth) {
     onAuthStateChanged(this.auth, (user) => this.currentUserSubject.next(user));
@@ -49,6 +55,7 @@ export class AuthService {
       this.accessToken = credential?.accessToken || undefined;
 
       console.log('✅ Login exitoso:', result.user?.email);
+
       console.log('🔑 Access Token obtenido:', !!this.accessToken);
 
       await this.createOrUpdateUser(result.user);
@@ -86,9 +93,16 @@ export class AuthService {
         fecha_actualizacion: new Date()
       };
 
+      console.log('Enviando usuario a API Java...', userData);
+
+      await firstValueFrom(this.http.post(this.apiUrl + 'Usuario' , userData));
+
+      console.log('✅ Usuario guardado/sincronizado en API Java con éxito');
+
       await setDoc(userRef, userData, { merge: true });
 
       console.log('✅ Usuario creado/actualizado en Firestore:', user.uid);
+
     }
     catch (error) {
       console.error('❌ Error al crear/actualizar usuario:', error);

@@ -192,7 +192,7 @@
   <div class="flex-1">
     @if (contactoSeleccionado()) {
       <!-- ✅ Mostrar el chat-item component -->
-      <chat-item [contacto]="contactoSeleccionado()!"></chat-item>
+      <chat-item [contacto]="contactoSeleccionado()!" [usuarioLogeado]="userId!"></chat-item>
     } @else {
       <!-- ✅ Estado inicial sin contacto -->
       <div class="flex items-center justify-center h-full">

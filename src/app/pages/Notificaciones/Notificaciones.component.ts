@@ -35,6 +35,7 @@ export default class NotificacionesComponent implements OnInit {
     await this.gastoService.getAllGastosByUser(this.user?.uid || '').subscribe(
       (gastos) => {
         this.gastos.set(gastos);
+        console.log(this.gastos());
       }
     );
 

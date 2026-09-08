@@ -23,10 +23,12 @@ import {
   QuerySnapshot
 } from '@angular/fire/firestore';
 
-import { Observable } from 'rxjs';
+import { firstValueFrom, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Sueldo } from '../interfaces';
 import { catchError, of } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -34,7 +36,12 @@ import { catchError, of } from 'rxjs';
 export class SueldoService {
 
 
-  firestore : Firestore = inject(Firestore);
+  private firestore : Firestore = inject(Firestore);
+  private http = inject(HttpClient);
+
+  private apiUrl = environment.finance_flow_api.apiUrl;
+
+
 
   getSueldoByUser(userId: string): Observable<Sueldo | null> {
     const sueldoColeccion: CollectionReference<Sueldo> = collection(this.firestore, 'sueldo') as CollectionReference<Sueldo>;
@@ -61,16 +68,18 @@ export class SueldoService {
 
 
     async guardarSueldo(sueldo: Sueldo): Promise<boolean> {
-      debugger;
       try {
+        //1: Finance Flow API
+        debugger;
+        console.log("Sueldo a guardar:");
+        console.log(sueldo);
+        const respuesta = await firstValueFrom(this.http.post(`${this.apiUrl}sueldos/actualizar`, sueldo));
+        console.log("Respuesta del servidor: " + respuesta);
+
+        //2: FireStore
         const sueldoColeccion: CollectionReference<Sueldo> = collection(this.firestore, 'sueldo') as CollectionReference<Sueldo>;
         const sueldoQuery: Query<Sueldo> = query(sueldoColeccion, where('usuario', '==', sueldo.usuario)) as Query<Sueldo>;
-
-
         const snapshot : QuerySnapshot<Sueldo> = await getDocs(sueldoQuery);
-
-
-
         // Crear nuevo sueldo
         const sueldoData = {
           ...sueldo,
@@ -78,8 +87,7 @@ export class SueldoService {
           fecha_actualizacion: Timestamp.now()
         };
 
-         if (snapshot.size > 0) {
-
+        if (snapshot.size > 0) {
           await updateDoc(doc(sueldoColeccion, snapshot.docs[0].id), sueldoData);
           return true;
         }

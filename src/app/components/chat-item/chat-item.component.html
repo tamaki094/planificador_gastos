@@ -2,8 +2,39 @@
 
   <div class="mensajes flex-1 p-4 border-3 border-gray-200 rounded mb-4 m-4 overflow-y-auto">
     <div class="text-center py-8 text-gray-500">
-      Los mensajes aparecerán aquí...
-    </div>
+      @defer {
+        @for (mensaje of mensajes$ | async; track mensaje.id) {
+          <div class="mensaje mb-4 flex w-full" [attr.data-id]="mensaje.id">
+            @if(mensaje.de_usuario === usuarioLogeado) {
+              <div class="w-full flex justify-end">
+                <div class="bubble bg-blue-500 text-white px-4 py-2 rounded-lg rounded-br-none max-w-[70%] shadow">
+                  <div class="text-xs text-blue-100 font-semibold mb-1 text-right">{{ nombreLogeado() }}</div>
+                  <div class="text-sm">{{ mensaje.mensaje }}</div>
+                  <div class="text-xs text-gray-400 mt-1">
+                    {{ mensaje.fecha | date: 'dd-MM-yy HH:mm' }}
+                  </div>
+                </div>
+              </div>
+            } @else {
+              <div class="w-full flex justify-start">
+                <div class="bubble bg-gray-100 text-gray-800 px-4 py-2 rounded-lg rounded-bl-none max-w-[70%] shadow">
+                  <div class="text-xs text-gray-500 font-semibold mb-1">{{ nombreAmigo() }}</div>
+                  <div class="text-sm">{{ mensaje.mensaje }}</div>
+                  <div class="text-xs text-gray-400 mt-1">
+                    {{ mensaje.fecha | date: 'dd-MM-yy HH:mm' }}
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+      }
+      } @placeholder {
+        <p>Preparando la conversación...</p>
+      } @loading {
+        <p>Cargando mensajes...</p>
+      } @error {
+        <p>Ocurrió un error al cargar los mensajes</p>
+      }
   </div>
 
   <div class="caja-texto-enviar flex-shrink-0">
@@ -11,11 +42,12 @@
       <textarea
         class="w-full border border-gray-300 rounded p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
         rows="3"
-        placeholder="Escribe tu mensaje...">
+        placeholder="Escribe tu mensaje..."
+        #textoMensaje>
       </textarea>
     </div>
     <div class="caja-enviar p-4">
-      <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-all duration-200">
+      <button  (click)="enviarMensaje(textoMensaje.value); textoMensaje.value = ''" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-all duration-200">
         Enviar
       </button>
     </div>

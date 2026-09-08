@@ -1,0 +1,126 @@
+Listado de rutas de carpetas para el volumen OS
+El número de serie del volumen es 0000016A F636:D046
+C:\USERS\EDRIA\ONEDRIVE\DOCUMENTOS\PROYECTOS\ANGULAR\PLANIFICADOR_GASTOS\SRC
+|   index.html
+|   main.ts
+|   styles.css
+|   
++---app
+|   |   app.config.ts
+|   |   app.css
+|   |   app.html
+|   |   app.routes.ts
+|   |   app.spec.ts
+|   |   app.ts
+|   |   
+|   +---components
+|   |   +---chat-item
+|   |   |       chat-item.component.html
+|   |   |       chat-item.component.ts
+|   |   |       
+|   |   +---GastoItem
+|   |   |       gasto-item.component.html
+|   |   |       gasto-item.component.ts
+|   |   |       
+|   |   +---MontoSueldoItem
+|   |   |       monto-sueldo-item.html
+|   |   |       monto-sueldo-item.ts
+|   |   |       
+|   |   \---Notificacion
+|   |           Notificacion.component.html
+|   |           Notificacion.component.ts
+|   |           
+|   +---interfaces
+|   |       Categoria.ts
+|   |       Contacto.ts
+|   |       ContactoConUsuario.ts
+|   |       Gasto.ts
+|   |       index.ts
+|   |       Mensaje.ts
+|   |       Montos.ts
+|   |       Sueldo.ts
+|   |       TipoGasto.ts
+|   |       Usuario.ts
+|   |       
+|   +---pages
+|   |   +---Blog
+|   |   |       Blog.component.html
+|   |   |       Blog.component.ts
+|   |   |       
+|   |   +---Chat
+|   |   |       chat.component.html
+|   |   |       chat.component.ts
+|   |   |       
+|   |   +---Dashboard
+|   |   |       Dashboard.component.html
+|   |   |       Dashboard.component.ts
+|   |   |       
+|   |   +---gasto-fijos
+|   |   |       gastos-fijos.component.html
+|   |   |       gastos-fijos.component.ts
+|   |   |       
+|   |   +---gastos-extras
+|   |   |       gastos-extras.component.html
+|   |   |       gastos-extras.component.ts
+|   |   |       
+|   |   +---Login
+|   |   |       Login.component.html
+|   |   |       Login.component.ts
+|   |   |       
+|   |   +---Notificaciones
+|   |   |       Notificaciones.component.html
+|   |   |       Notificaciones.component.ts
+|   |   |       
+|   |   +---Profile
+|   |   |       Profile.component.html
+|   |   |       Profile.component.ts
+|   |   |       
+|   |   +---Sueldo
+|   |   |       Sueldo.component.html
+|   |   |       Sueldo.component.ts
+|   |   |       
+|   |   \---TiendaItalika
+|   |       |   TiendaItalika.html
+|   |       |   TiendaItalika.ts
+|   |       |   
+|   |       +---CatalogoProductos
+|   |       |       CatalogoProductos.html
+|   |       |       CatalogoProductos.ts
+|   |       |       
+|   |       \---OrdenesCompra
+|   |           |   OrdenesCompra.html
+|   |           |   OrdenesCompra.ts
+|   |           |   
+|   |           \---PagoOrdenCompra
+|   |                   PagoOrdenCompra.html
+|   |                   PagoOrdenCompra.ts
+|   |                   
+|   +---services
+|   |       ApiTiendaItalika.ts
+|   |       Auth.service.ts
+|   |       AuthGuard.service.ts
+|   |       Categoria.service.ts
+|   |       Contacto.service.ts
+|   |       Gasto.service.ts
+|   |       Mensajes.service.ts
+|   |       Montos.service.ts
+|   |       Sueldo.service.ts
+|   |       Usuario.service.ts
+|   |       
+|   \---shared
+|       +---aside-menu
+|       |       aside-menu.component.html
+|       |       aside-menu.component.ts
+|       |       
+|       +---footer
+|       |       footer.component.html
+|       |       footer.component.ts
+|       |       
+|       \---nav-bar
+|               nav-bar.component.html
+|               nav-bar.component.ts
+|               
+\---environments
+        environment.development.ts
+        environment.ts
+        
